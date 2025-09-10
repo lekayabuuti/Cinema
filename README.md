@@ -35,48 +35,6 @@ O módulo implementa um agregado de classes seguindo os princípios de **Domain-
 
 ---
 
-## User Story
-
-> Como **usuário**, eu quero **reservar um ingresso para uma sessão de cinema, escolhendo o assento**, para que **eu possa garantir meu lugar no filme**  
-
----
-
-## Cenários BDD
-
-### Cenário 1 – Reserva bem-sucedida
-**Dado que** existe uma sessão de cinema com ingressos disponíveis  
-**E** o assento escolhido está livre  
-**Quando** o usuário reservar o ingresso para esse assento  
-**Então** o ingresso deve ser criado  
-**E** o assento marcado como reservado  
-**E** a sessão atualizada com a nova reserva  
-
----
-
-### Cenário 2 – Assento já reservado
-**Dado que** o assento escolhido já está reservado  
-**Quando** o usuário tentar reservar o ingresso  
-**Então** a reserva não deve ser efetuada  
-**E** exibir "Assento indisponível"  
-
----
-
-### Cenário 3 – Sessão do passado
-**Dado que** a sessão está em data/hora passada  
-**Quando** o usuário tentar reservar o ingresso  
-**Então** a reserva não deve ser efetuada  
-**E** exibir "Sessão encerrada"  
-
----
-
-### Cenário 4 – Sessão lotada
-**Dado que** a sessão está com todos os assentos preenchidos  
-**Quando** o usuário tentar reservar o ingresso  
-**Então** a reserva não deve ser efetuada  
-**E** exibir "Sessão lotada"  
-
----
-
 ## Equipe
 
 **Projeto desenvolvido por:**  
