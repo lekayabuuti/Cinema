@@ -38,8 +38,8 @@ O módulo implementa um agregado de classes seguindo os princípios de **Domain-
 ## Equipe
 
 **Projeto desenvolvido por:**  
-- Breno Lopes  : [@brenonlps](https://github.com/brenonlps)  
-- Letícia Yabuuti: [@lekayabuuti](https://github.com/lekayabuuti)
+- Breno Nascimento Lopes  : [@brenonlps](https://github.com/brenonlps)  
+- Letícia Kaori Yabuuti: [@lekayabuuti](https://github.com/lekayabuuti)
 - Lucas Matheus dos Santos: [@lucaofaz](https://github.com/LucaoFaz)
 
 **Professor:**  
