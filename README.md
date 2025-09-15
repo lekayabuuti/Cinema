@@ -40,7 +40,7 @@ O módulo implementa um agregado de classes seguindo os princípios de **Domain-
 **Projeto desenvolvido por:**  
 - Breno Lopes  : [@brenonlps](https://github.com/brenonlps)  
 - Letícia Yabuuti: [@lekayabuuti](https://github.com/lekayabuuti)
-- Lucas dos Santos: [@lucaofaz](https://github.com/LucaoFaz)
+- Lucas Matheus dos Santos: [@lucaofaz](https://github.com/LucaoFaz)
 
 **Professor:**  
 Prof. Dr. Lucas Oliveira  
