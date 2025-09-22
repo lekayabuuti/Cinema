@@ -21,7 +21,7 @@ O módulo implementa um agregado de classes seguindo os princípios de **Domain-
 
 ### Aggregate
 
-- **SessaoCinema (Aggregate Root)**: representa uma sessão específica de um filme, incluindo horário, sala e ingressos disponíveis  
+- **SessaoCinema (Aggregate Root)**: representa uma sessão específica de um filme, incluindo ID, nome do filme, horário, sala e ingressos disponíveis  
 - **Ingresso (Entidade Interna)**: representa um ingresso vinculado à sessão, com informações como assento e status (reservado, cancelado)  
 - **Horario (Value Object)**: encapsula data e hora da sessão, garantindo validade e consistência  
 - **Assento (Value Object)**: representa a posição do assento (ex: fileira A, número 10), usado para controle de ocupação  
