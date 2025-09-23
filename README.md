@@ -21,8 +21,8 @@ O módulo implementa um agregado de classes seguindo os princípios de **Domain-
 
 ### Aggregate
 
-- **SessaoCinema (Aggregate Root)**: representa uma sessão específica de um filme, incluindo ID, nome do filme, horário, sala e ingressos disponíveis  
-- **Ingresso (Entidade Interna)**: representa um ingresso vinculado à sessão, com informações como assento e status (reservado, cancelado)  
+- **SessaoCinema (Aggregate Root)**: representa uma sessão específica de um filme, incluindo ID, nome do filme, horário, sala e todos os assentos 
+- **Ingresso (Entidade Interna)**: representa um ingresso vinculado a um assento de uma determinada sessão, com informações como código do assento e status (reservado, cancelado ou disponível)  
 - **Horario (Value Object)**: encapsula data e hora da sessão, garantindo validade e consistência  
 - **Assento (Value Object)**: representa a posição do assento (ex: fileira A, número 10), usado para controle de ocupação  
 - **SessaoCinemaRepository (Repositório)**: interface para persistência e recuperação de sessões, com métodos como salvar, buscar por data, atualizar e remover  
@@ -30,8 +30,8 @@ O módulo implementa um agregado de classes seguindo os princípios de **Domain-
 ### Serviços de Aplicação
 
 - `ReservaIngressoService`: lógica para reservar um ingresso, verificando disponibilidade  
-- `CancelamentoService`: permite cancelar uma reserva antes do início da sessão  
-- `ListagemSessoesService`: retorna sessões disponíveis para uma data específica  
+- `CancelamentoService`: permite cancelar uma reserva até 5 minutos antes do início da sessão  
+- `ListagemSessoesService`: retorna sessões disponíveis dentro de um intervalo entre duas datas específicas, que devem possuir no máximo um intervalo de 7 dias entre si, e não devem ser maiores que 7 dias da data atual  
 
 ---
 
