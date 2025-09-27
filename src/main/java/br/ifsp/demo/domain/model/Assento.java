@@ -1,6 +1,6 @@
 package br.ifsp.demo.domain.model;
 
-import br.ifsp.demo.domain.model.enumerations.Status;
+import br.ifsp.demo.domain.enumerations.Status;
 
 public class Assento {
     private final String codigo;
