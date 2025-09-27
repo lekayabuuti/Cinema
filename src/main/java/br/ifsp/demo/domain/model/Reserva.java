@@ -1,8 +1,6 @@
-package br.ifsp.demo.model;
+package br.ifsp.demo.domain.model;
 
 import br.ifsp.demo.controller.TransactionController;
-import br.ifsp.demo.security.auth.AuthenticationInfoService;
-import br.ifsp.demo.security.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

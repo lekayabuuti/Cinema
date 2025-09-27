@@ -1,4 +1,4 @@
-package br.ifsp.demo.model;
+package br.ifsp.demo.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;

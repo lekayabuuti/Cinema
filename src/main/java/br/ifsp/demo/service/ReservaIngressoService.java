@@ -1,4 +1,4 @@
-package br.ifsp.demo.sevice;
+package br.ifsp.demo.service;
 
 public class ReservaIngressoService {
 

@@ -1,4 +1,4 @@
-package br.ifsp.demo.model;
+package br.ifsp.demo.domain.model;
 
 public class Ingresso {
     private Assento assento;
