@@ -20,9 +20,8 @@ public class SessaoServiceTest {
     SessaoService service;
 
     @Test
-    @DisplayName("Visualização de sessões bem-sucedida com data de início menor que a data final")
+    @DisplayName("Deve retornar sessões quando data inicial for menor que a data final")
     void visualizaSessaoCinemaComDataInicialMenorQueDataFinal() {
-
         LocalDate dataInicial = LocalDate.of(2020, 1, 1);
         LocalDate dataFinal = LocalDate.of(2020, 1, 2);
         Filme filme = new Filme("Filme Teste", 120);
@@ -35,4 +34,24 @@ public class SessaoServiceTest {
         List<Sessao> resultado = service.buscarSessoesEntre(dataInicial,dataFinal);
         assertThat(resultado).isNotEmpty();
     }
+
+    @Test
+    @DisplayName("Deve retornar sessões quando data inicial for igual a data final")
+    void visualizaSessaoCinemaComDataInicialIgualDataFinal(){
+        LocalDate dataInicial = LocalDate.of(2020, 1, 1);
+        LocalDate dataFinal = LocalDate.of(2020, 1, 1);
+        Filme filme = new Filme("Filme Teste", 120);
+        Horario horario = new Horario(LocalDate.of(2020, 1, 1), LocalTime.of(20, 0));
+        Sala sala = new Sala(1);
+
+        List<Sessao> mockSessao = List.of( new Sessao(filme,horario,sala));
+        when(repository.buscarEntreDatas(dataInicial,dataFinal)).thenReturn(mockSessao);
+
+        List<Sessao> resultado = service.buscarSessoesEntre(dataInicial,dataFinal);
+        assertThat(resultado).isNotEmpty();
+    }
+
+
+
+
 }
