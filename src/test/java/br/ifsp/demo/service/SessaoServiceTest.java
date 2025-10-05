@@ -1,5 +1,8 @@
 package br.ifsp.demo.service;
 import br.ifsp.demo.domain.model.*;
+import br.ifsp.demo.entity.SessaoEntity;
+import br.ifsp.demo.exception.*;
+import br.ifsp.demo.mapper.SessaoMapper;
 import br.ifsp.demo.repository.SessaoRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,38 +21,50 @@ public class SessaoServiceTest {
     SessaoRepository repository;
     @InjectMocks
     SessaoService service;
+    @Spy
+    SessaoMapper mapper = new SessaoMapper();
+
+    private SessaoEntity novaSessao(String nome, int minutos, LocalDate data, LocalTime hora, int sala) {
+        SessaoEntity s = new SessaoEntity();
+        s.setFilmeNome(nome);
+        s.setFilmeMinutos(minutos);
+        s.setHorarioData(data);
+        s.setHorarioHora(hora);
+        s.setNumeroSala(sala);
+        return s;
+    }
 
     @Test
     @DisplayName("Deve retornar sessões quando data inicial for menor que a data final")
-    void visualizaSessaoCinemaComDataInicialMenorQueDataFinal() {
+    void retornarSessaoCinemaComDataInicialMenorQueDataFinal() {
         LocalDate dataInicial = LocalDate.of(2020, 1, 1);
         LocalDate dataFinal = LocalDate.of(2020, 1, 2);
-        Filme filme = new Filme("Filme Teste", 120);
-        Horario horario = new Horario(LocalDate.of(2020, 1, 1), LocalTime.of(20, 0));
-        Sala sala = new Sala(1);
+        SessaoEntity entity = novaSessao("Matrix", 136, dataInicial, LocalTime.of(19, 30), 3);
 
-        List<Sessao> mockSessoes = List.of(new Sessao(filme, horario, sala));
-        when(repository.buscarEntreDatas(dataInicial,dataFinal)).thenReturn(mockSessoes);
-
+        when(repository.buscarEntreDatas(dataInicial, dataFinal)).thenReturn(List.of(entity));
         List<Sessao> resultado = service.buscarSessoesEntre(dataInicial,dataFinal);
+
         assertThat(resultado).isNotEmpty();
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getFilme().nome()).isEqualTo("Matrix");
     }
 
     @Test
     @DisplayName("Deve retornar sessões quando data inicial for igual a data final")
-    void visualizaSessaoCinemaComDataInicialIgualDataFinal(){
+    void retornarSessaoCinemaComDataInicialIgualDataFinal() {
         LocalDate dataInicial = LocalDate.of(2020, 1, 1);
         LocalDate dataFinal = LocalDate.of(2020, 1, 1);
-        Filme filme = new Filme("Filme Teste", 120);
-        Horario horario = new Horario(LocalDate.of(2020, 1, 1), LocalTime.of(20, 0));
-        Sala sala = new Sala(1);
+        SessaoEntity entity = novaSessao("Filme Teste", 120, dataInicial, LocalTime.of(20, 0), 1);
 
-        List<Sessao> mockSessao = List.of( new Sessao(filme,horario,sala));
-        when(repository.buscarEntreDatas(dataInicial,dataFinal)).thenReturn(mockSessao);
+        when(repository.buscarEntreDatas(dataInicial, dataFinal)).thenReturn(List.of(entity));
+        List<Sessao> resultado = service.buscarSessoesEntre(dataInicial, dataFinal);
 
-        List<Sessao> resultado = service.buscarSessoesEntre(dataInicial,dataFinal);
         assertThat(resultado).isNotEmpty();
+        assertThat(resultado.get(0).getFilme().nome()).isEqualTo("Filme Teste");
+        assertThat(resultado.get(0).getHorario().hora()).isEqualTo(LocalTime.of(20, 0));
+        assertThat(resultado.get(0).getSala().getNumeroSala()).isEqualTo(1);
     }
+
 
 
 

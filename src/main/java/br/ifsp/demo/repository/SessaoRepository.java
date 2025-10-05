@@ -8,5 +8,5 @@ import java.time.LocalDate;
 
 public interface SessaoRepository extends JpaRepository<SessaoEntity, Long> {
 
-    List<Sessao> buscarEntreDatas(LocalDate dataInicial, LocalDate dataFinal);
+    List<SessaoEntity> buscarEntreDatas(LocalDate dataInicial, LocalDate dataFinal);
 }
