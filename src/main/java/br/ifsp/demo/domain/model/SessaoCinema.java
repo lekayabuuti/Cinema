@@ -1,13 +1,19 @@
 package br.ifsp.demo.domain.model;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class SessaoCinema {
+    @Getter
     private final String id;
+    @Getter
     private final Filme filme;
+    @Getter
     private final Horario horario;
+    @Getter
     private final Sala sala;
     private final List<Ingresso> ingressosReservados;
 
@@ -27,9 +33,5 @@ public class SessaoCinema {
         return List.copyOf(ingressosReservados);
     }
 
-    public String getId() { return id; }
-    public Filme getFilme() { return filme; }
-    public Horario getHorario() { return horario; }
-    public Sala getSala() { return sala; }
 }
 
