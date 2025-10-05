@@ -65,7 +65,16 @@ public class SessaoServiceTest {
         assertThat(resultado.get(0).getSala().getNumeroSala()).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("Não deve retornar sessões quando data inicial for 7 dias maior que a data atual")
+    void naoRetornarSessaoCinemaComDataInicialSeteDiasMaiorQueDataAtual() {
+        LocalDate dataInicial = LocalDate.now().plusDays(8);
+        LocalDate dataFinal = dataInicial.plusDays(9);
 
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataInicial, dataFinal))
+                .isInstanceOf(DataInvalidaException.class)
+                .hasMessageContaining("Data inicial não pode ser superior a 7 dias");
+    }
 
 
 
