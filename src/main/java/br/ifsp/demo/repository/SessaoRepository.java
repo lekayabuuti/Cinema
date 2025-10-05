@@ -1,0 +1,11 @@
+package br.ifsp.demo.repository;
+
+import br.ifsp.demo.entity.SessaoEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.time.LocalDate;
+
+public interface SessaoRepository extends JpaRepository<SessaoEntity, Long> {
+
+    List<SessaoEntity> buscarEntreDatas(LocalDate dataInicial, LocalDate dataFinal);
+}
