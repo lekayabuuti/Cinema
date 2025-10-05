@@ -1,17 +1,12 @@
 package br.ifsp.demo.service;
-import br.ifsp.demo.domain.model.Sessao;
+import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.repository.SessaoRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
+import java.time.*;
 import java.util.List;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -27,10 +22,14 @@ public class SessaoServiceTest {
     @Test
     @DisplayName("Visualização de sessões bem-sucedida com data de início menor que a data final")
     void visualizaSessaoCinemaComDataInicialMenorQueDataFinal() {
+
         LocalDate dataInicial = LocalDate.of(2020, 1, 1);
         LocalDate dataFinal = LocalDate.of(2020, 1, 2);
+        Filme filme = new Filme("Filme Teste", 120);
+        Horario horario = new Horario(LocalDate.of(2020, 1, 1), LocalTime.of(20, 0));
+        Sala sala = new Sala(1);
 
-        List<Sessao> mockSessoes = List.of(new Sessao());
+        List<Sessao> mockSessoes = List.of(new Sessao(filme, horario, sala));
         when(repository.buscarEntreDatas(dataInicial,dataFinal)).thenReturn(mockSessoes);
 
         List<Sessao> resultado = service.buscarSessoesEntre(dataInicial,dataFinal);
