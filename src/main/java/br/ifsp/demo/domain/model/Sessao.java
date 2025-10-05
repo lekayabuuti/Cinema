@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SessaoCinema {
+public class Sessao {
     private final String id;
     private final Filme filme;
     private final Horario horario;
     private final Sala sala;
     private final List<Ingresso> ingressosReservados;
 
-    public SessaoCinema(Filme filme, Horario horario, Sala sala) {
+    public Sessao(Filme filme, Horario horario, Sala sala) {
         this.id = UUID.randomUUID().toString();
         this.filme = filme;
         this.horario = horario;
