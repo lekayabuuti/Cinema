@@ -13,6 +13,7 @@ import java.util.List;
 public class SessaoService {
     private final SessaoRepository repository;
     private final SessaoMapper mapper;
+    private static final int LIMITE_DIAS = 7;
 
     public SessaoService(SessaoRepository repository, SessaoMapper mapper) {
         this.repository = repository;
@@ -20,12 +21,18 @@ public class SessaoService {
     }
 
     public List<Sessao> buscarSessoesEntre(LocalDate dataInicial, LocalDate dataFinal) {
-        if(dataInicial.isAfter(LocalDate.now().plusDays(7))){
-            throw new DataInvalidaException("Data inicial não pode ser superior a 7 dias da data atual.");
-        }
+        validarData(dataInicial,"Data inicial");
+        validarData(dataFinal,"Data final");
+
         return repository.buscarEntreDatas(dataInicial,dataFinal)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    private void validarData(LocalDate data, String tipo) {
+        if (data.isAfter(LocalDate.now().plusDays(LIMITE_DIAS))) {
+            throw new DataInvalidaException(tipo + " não pode ser superior a " + LIMITE_DIAS + " dias da data atual.");
+        }
     }
 }
