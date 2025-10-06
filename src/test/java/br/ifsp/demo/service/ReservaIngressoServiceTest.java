@@ -1,9 +1,6 @@
 package br.ifsp.demo.service;
 
-import br.ifsp.demo.domain.model.Assento;
-import br.ifsp.demo.domain.model.Ingresso;
-import br.ifsp.demo.domain.model.Sala;
-import br.ifsp.demo.domain.model.Sessao;
+import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.repository.SessaoRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -12,6 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @Tag("UnitTest")
@@ -25,9 +27,19 @@ class ReservaIngressoServiceTest {
 
     @Test
     @DisplayName("Deve reservar um ingresso com sucesso a sessão e o assento estão disponiveis")
-    Sala sala01 = new Sala(1);
-    Assento assentoA1 = new Assento("A", sala01);
-    Ingresso ingressoDisponivel = new Ingresso(assentoA1, StatusIngresso.DISPONIVEL);
-    Sessao sessaoTeste = new Sessao()
+    public void deveReservarComSucessoQuandoSessaoEAssentoEstaoDisponiveis(){
+        Sala sala01 = new Sala(1);
+        Filme filme01 = new Filme("Filme1", 90);
+        LocalDate dataDaSessao = LocalDate.of(2025, 10, 6);
+        LocalTime horaDaSessao = LocalTime.of(19, 30);
+        Horario horario01 = new Horario(dataDaSessao, horaDaSessao);
+
+        Sessao sessaoTeste = new Sessao(filme01, horario01 ,sala01);
+        Long sessaoTesteId = 1L;
+        sessaoTeste.setId(sessaoTesteId);
+
+        when(sessaoCinemaRepository.findById(sessaoTesteId)).thenReturn(Optional.of(sessaoTeste));
+    }
+
 
 }
