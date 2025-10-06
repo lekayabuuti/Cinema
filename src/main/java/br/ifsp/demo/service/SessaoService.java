@@ -24,20 +24,14 @@ public class SessaoService {
     }
 
     public List<Sessao> buscarSessoesEntre(LocalDate dataInicial, LocalDate dataFinal) {
-        validarDataLimite(dataInicial,"Data inicial");
-        validarDataLimite(dataFinal,"Data final");
-
-        validarDataDisponivel(dataInicial);
-        validarDataDisponivel(dataFinal);
-
-        validarDataExpiracao(dataInicial);
-        validarDataExpiracao(dataFinal);
+        validacao(dataInicial, dataFinal);
 
         return sessaoRepository.findByDataBetween(dataInicial,dataFinal)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
+
 
     private void validarDataLimite(LocalDate data, String tipo) {
         if (data.isAfter(LocalDate.now().plusDays(LIMITE_DIAS))) {
@@ -53,7 +47,24 @@ public class SessaoService {
 
     private void validarDataExpiracao(LocalDate data) {
         if (data.isBefore(LocalDate.now())) {
-            throw new DataPassadaException("Nenhuma data deve ser anterior ao dia Atual");
+            throw new DataPassadaException("Datas anteriores à atual não são permitidas.");
         }
     }
+
+
+    private void validacao(LocalDate dataInicial, LocalDate dataFinal) {
+        if(dataInicial.isAfter(dataFinal)) {
+            throw new DataInvalidaException("Data final não pode ser anterior à data inicial.");
+        }
+
+        validarDataLimite(dataInicial,"Data inicial");
+        validarDataLimite(dataFinal,"Data final");
+
+        validarDataDisponivel(dataInicial);
+        validarDataDisponivel(dataFinal);
+
+        validarDataExpiracao(dataInicial);
+        validarDataExpiracao(dataFinal);
+    }
+
 }
