@@ -102,5 +102,36 @@ public class SessaoServiceTest {
         .isInstanceOf(SessaoIndisponivelException.class);
     }
 
+    @Test
+    @DisplayName("Deve acionar DataPassadaException quando data estiver indiponível para sessões")
+    void deveLancarExcecaoQuandoDataForUmaDataPassada(){
+        LocalDate dataPassada = LocalDate.now().minusDays(1);
+        LocalDate dataFinal = dataPassada.plusDays(1);
+
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataPassada, dataFinal))
+                .isInstanceOf(DataPassadaException.class);
+    }
+
+    @Test
+    @DisplayName("Deve retornar lista vazia quando nao existir nenhuma sessao entre as datas")
+    void  retornarListaVaziaSeNaoExistirNenhumaSessao(){
+        LocalDate dataInicial = LocalDate.now();
+        LocalDate dataFinal = dataInicial.plusDays(1);
+        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of());
+        List<Sessao> resultado = service.buscarSessoesEntre(dataInicial, dataFinal);
+        assertThat(resultado).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Deve acionar DataInvalidaException quando data final for antes de data inicial")
+    void  deveLancarExcecaoQuandoDataFinalMenorQueDataInicial(){
+        LocalDate dataInicial = LocalDate.now().plusDays(2);
+        LocalDate dataFinal =   LocalDate.now().plusDays(1);
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataInicial, dataFinal))
+                .isInstanceOf(DataInvalidaException.class);
+    }
+
 
 }

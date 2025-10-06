@@ -101,4 +101,18 @@ public class ApiExceptionHandler {
 
         return new ResponseEntity<>(apiException, badRequest);
     }
+
+    @ExceptionHandler(DataPassadaException.class)
+    public ResponseEntity<?> handleDataPassadaException(DataPassadaException ex) {
+        final HttpStatus badRequest = BAD_REQUEST;
+
+        final ApiException apiException = ApiException.builder()
+                .status(badRequest)
+                .message(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .timestamp(ZonedDateTime.now(ZoneId.of("Z")))
+                .build();
+
+        return new ResponseEntity<>(apiException, badRequest);
+    }
 }
