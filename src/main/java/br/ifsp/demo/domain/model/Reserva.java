@@ -11,14 +11,14 @@ public class Reserva {
     private UUID id;
 
     @ManyToOne(optional = false)
-    private SessaoCinema sessao;
+    private Sessao sessao;
 
     @OneToOne(optional = false)
     private Ingresso ingresso;
 
     public Reserva() {}
 
-    public Reserva(SessaoCinema sessao, Ingresso ingresso) {
+    public Reserva(Sessao sessao, Ingresso ingresso) {
         this.sessao = sessao;
         this.ingresso = ingresso;
     }
@@ -27,7 +27,7 @@ public class Reserva {
         return id;
     }
 
-    public SessaoCinema getSessao() {
+    public Sessao getSessao() {
         return sessao;
     }
 

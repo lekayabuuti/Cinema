@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SessaoCinema {
+public class Sessao {
     @Getter
     private final String id;
     @Getter
@@ -17,7 +17,7 @@ public class SessaoCinema {
     private final Sala sala;
     private final List<Ingresso> ingressosReservados;
 
-    public SessaoCinema(Filme filme, Horario horario, Sala sala) {
+    public Sessao(Filme filme, Horario horario, Sala sala) {
         this.id = UUID.randomUUID().toString();
         this.filme = filme;
         this.horario = horario;
