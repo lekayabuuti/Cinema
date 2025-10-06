@@ -30,6 +30,9 @@ public class SessaoService {
         validarDataDisponivel(dataInicial);
         validarDataDisponivel(dataFinal);
 
+        validarDataExpiracao(dataInicial);
+        validarDataExpiracao(dataFinal);
+
         return sessaoRepository.findByDataBetween(dataInicial,dataFinal)
                 .stream()
                 .map(mapper::toDomain)
@@ -45,6 +48,12 @@ public class SessaoService {
     private void validarDataDisponivel(LocalDate data) {
         if(dataIndisponivelRepository.existsByData(data)){
             throw new SessaoIndisponivelException("Data "+ data +" indisponível para sessões");
+        }
+    }
+
+    private void validarDataExpiracao(LocalDate data) {
+        if (data.isBefore(LocalDate.now())) {
+            throw new DataPassadaException("Nenhuma data deve ser anterior ao dia Atual");
         }
     }
 }
