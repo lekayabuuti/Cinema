@@ -123,6 +123,15 @@ public class SessaoServiceTest {
         assertThat(resultado).isEmpty();
     }
 
+    @Test
+    @DisplayName("Deve acionar DataInvalidaException quando data final for antes de data inicial")
+    void  deveLancarExcecaoQuandoDataFinalMenorQueDataInicial(){
+        LocalDate dataInicial = LocalDate.now().plusDays(2);
+        LocalDate dataFinal =   LocalDate.now().plusDays(1);
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataInicial, dataFinal))
+                .isInstanceOf(DataInvalidaException.class);
+    }
 
 
 }
