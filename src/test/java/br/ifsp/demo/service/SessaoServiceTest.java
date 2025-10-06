@@ -113,4 +113,16 @@ public class SessaoServiceTest {
                 .isInstanceOf(DataPassadaException.class);
     }
 
+    @Test
+    @DisplayName("Deve retornar lista vazia quando nao existir nenhuma sessao entre as datas")
+    void  retornarListaVaziaSeNaoExistirNenhumaSessao(){
+        LocalDate dataInicial = LocalDate.now();
+        LocalDate dataFinal = dataInicial.plusDays(1);
+        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of());
+        List<Sessao> resultado = service.buscarSessoesEntre(dataInicial, dataFinal);
+        assertThat(resultado).isEmpty();
+    }
+
+
+
 }
