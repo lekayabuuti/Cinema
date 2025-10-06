@@ -3,6 +3,7 @@ import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.entity.SessaoEntity;
 import br.ifsp.demo.exception.*;
 import br.ifsp.demo.mapper.SessaoMapper;
+import br.ifsp.demo.repository.DataIndisponivelRepository;
 import br.ifsp.demo.repository.SessaoRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class SessaoServiceTest {
     @Mock
-    SessaoRepository repository;
+    SessaoRepository sessaoRepository;
+    @Mock
+    DataIndisponivelRepository dataIndisponivelRepository;
+
+
     @InjectMocks
     SessaoService service;
     @Spy
@@ -41,7 +46,7 @@ public class SessaoServiceTest {
         LocalDate dataFinal = LocalDate.of(2020, 1, 2);
         SessaoEntity entity = novaSessao("Matrix", 136, dataInicial, LocalTime.of(19, 30), 3);
 
-        when(repository.buscarEntreDatas(dataInicial, dataFinal)).thenReturn(List.of(entity));
+        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(entity));
         List<Sessao> resultado = service.buscarSessoesEntre(dataInicial,dataFinal);
 
         assertThat(resultado).isNotEmpty();
@@ -56,7 +61,7 @@ public class SessaoServiceTest {
         LocalDate dataFinal = LocalDate.of(2020, 1, 1);
         SessaoEntity entity = novaSessao("Filme Teste", 120, dataInicial, LocalTime.of(20, 0), 1);
 
-        when(repository.buscarEntreDatas(dataInicial, dataFinal)).thenReturn(List.of(entity));
+        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(entity));
         List<Sessao> resultado = service.buscarSessoesEntre(dataInicial, dataFinal);
 
         assertThat(resultado).isNotEmpty();
@@ -84,5 +89,18 @@ public class SessaoServiceTest {
         assertThatThrownBy(() -> service.buscarSessoesEntre(dataInicial, dataFinal))
         .isInstanceOf(DataInvalidaException.class);
     }
+
+    @Test
+    @DisplayName("Deve acionar SessaoIndisponivelException quando data estiver indiponível para sessões")
+    void deveLancarExcecaoQuandoDataEstiverIndisponivel(){
+        LocalDate dataIndisponivel = LocalDate.of(2020, 1, 1);
+        LocalDate dataFinal = dataIndisponivel.plusDays(1);
+
+        when(dataIndisponivelRepository.existsByData(dataIndisponivel)).thenReturn(true);
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataIndisponivel, dataFinal))
+        .isInstanceOf(SessaoIndisponivelException.class);
+    }
+
 
 }

@@ -30,7 +30,7 @@ public class SessaoService {
         validarDataDisponivel(dataInicial);
         validarDataDisponivel(dataFinal);
 
-        return sessaoRepository.buscarEntreDatas(dataInicial,dataFinal)
+        return sessaoRepository.findByDataBetween(dataInicial,dataFinal)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
