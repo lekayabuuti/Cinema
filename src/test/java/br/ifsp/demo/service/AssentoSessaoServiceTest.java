@@ -50,4 +50,23 @@ public class AssentoSessaoServiceTest {
         assertThat(resultado).extracting(AssentoSessao::getStatus)
                 .containsExactlyInAnyOrder(Status.DISPONIVEL, Status.RESERVADO);
     }
+
+    @Test
+    @DisplayName("Deve retornar todos os assentos disponíveis da sessão")
+    void deveRetornarTodosOsAssentosDisponiveisDaSessao() {
+        Long sessaoId = 1L;
+        List<AssentoSessaoEntity> entidades = List.of(
+                new AssentoSessaoEntity(null, null, Status.DISPONIVEL),
+                new AssentoSessaoEntity(null, null, Status.RESERVADO)
+        );
+
+        when(repository.findBySessaoId(sessaoId)).thenReturn(entidades);
+        List<AssentoSessao> resultado = service.buscarAssentosDisponiveis(sessaoId,Status.DISPONIVEL);
+
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado).extracting(AssentoSessao::getStatus)
+                .containsOnly(Status.DISPONIVEL);
+    }
+
+
 }
