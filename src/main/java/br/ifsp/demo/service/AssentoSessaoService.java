@@ -27,4 +27,13 @@ public class AssentoSessaoService {
                 .map(mapper::toDomain)
                 .toList();
     }
+
+    public List<AssentoSessao> buscarAssentosDisponiveis(Long sessaoId, Status status) {
+        List<AssentoSessaoEntity> entidades = repository.findBySessaoId(sessaoId);
+
+        return entidades.stream()
+                .filter(e -> e.getStatus().equals(status))
+                .map(mapper::toDomain)
+                .toList();
+    }
 }
