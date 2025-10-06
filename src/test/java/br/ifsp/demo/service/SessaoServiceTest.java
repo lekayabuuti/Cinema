@@ -143,4 +143,14 @@ public class SessaoServiceTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
+    @Test
+    @DisplayName("Deve acionar NullPointerException quando data final for null")
+    void  deveLancarExcecaoQuandoDataFinalForNull(){
+        LocalDate dataInicial = LocalDate.now().plusDays(1);
+        LocalDate dataFinal =   null;
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataInicial, dataFinal))
+                .isInstanceOf(NullPointerException.class);
+    }
+
 }
