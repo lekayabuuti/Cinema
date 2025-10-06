@@ -133,5 +133,24 @@ public class SessaoServiceTest {
                 .isInstanceOf(DataInvalidaException.class);
     }
 
+    @Test
+    @DisplayName("Deve acionar NullPointerException quando data inicial for null")
+    void  deveLancarExcecaoQuandoDataInicialForNull(){
+        LocalDate dataInicial = null;
+        LocalDate dataFinal =   LocalDate.now().plusDays(1);
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataInicial, dataFinal))
+                .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    @DisplayName("Deve acionar NullPointerException quando data final for null")
+    void  deveLancarExcecaoQuandoDataFinalForNull(){
+        LocalDate dataInicial = LocalDate.now().plusDays(1);
+        LocalDate dataFinal =   null;
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataInicial, dataFinal))
+                .isInstanceOf(NullPointerException.class);
+    }
 
 }
