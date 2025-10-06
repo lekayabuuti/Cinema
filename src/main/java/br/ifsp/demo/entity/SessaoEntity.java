@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "sessoes")
@@ -21,6 +23,9 @@ public class SessaoEntity implements Serializable {
 
     @Column(name = "numero_sala")
     private Integer numeroSala;
+
+    @OneToMany(mappedBy = "sessao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IngressoEntity> ingressos = new ArrayList<>();
 
     public SessaoEntity (){};
 
@@ -65,5 +70,12 @@ public class SessaoEntity implements Serializable {
     }
     public void setNumeroSala(Integer numeroSala) {
         this.numeroSala = numeroSala;
+    }
+
+    public List<IngressoEntity> getIngressos() {
+        return ingressos;
+    }
+    public void setIngressos(List<IngressoEntity> ingressos) {
+        this.ingressos = ingressos;
     }
 }
