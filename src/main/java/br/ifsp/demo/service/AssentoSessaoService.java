@@ -1,0 +1,30 @@
+package br.ifsp.demo.service;
+
+import br.ifsp.demo.domain.enumerations.Status;
+import br.ifsp.demo.domain.model.AssentoSessao;
+import br.ifsp.demo.entity.AssentoSessaoEntity;
+import br.ifsp.demo.mapper.AssentoSessaoMapper;
+import br.ifsp.demo.repository.AssentoSessaoRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AssentoSessaoService {
+
+    private final AssentoSessaoRepository repository;
+    private final AssentoSessaoMapper mapper;
+
+    public AssentoSessaoService(AssentoSessaoRepository repository, AssentoSessaoMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
+    public List<AssentoSessao> buscarPorSessao(Long sessaoId) {
+        List<AssentoSessaoEntity> entidades = repository.findBySessaoId(sessaoId);
+
+        return entidades.stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+}
