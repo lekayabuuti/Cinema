@@ -102,5 +102,15 @@ public class SessaoServiceTest {
         .isInstanceOf(SessaoIndisponivelException.class);
     }
 
+    @Test
+    @DisplayName("Deve acionar DataPassadaException quando data estiver indiponível para sessões")
+    void deveLancarExcecaoQuandoDataForUmaDataPassada(){
+        LocalDate dataPassada = LocalDate.now().minusDays(1);
+        LocalDate dataFinal = dataPassada.plusDays(1);
+
+
+        assertThatThrownBy(() -> service.buscarSessoesEntre(dataPassada, dataFinal))
+                .isInstanceOf(DataPassadaException.class);
+    }
 
 }
