@@ -1,7 +1,9 @@
 package br.ifsp.demo.domain.model;
 
 import br.ifsp.demo.domain.enumerations.Status;
+import lombok.Data;
 
+@Data
 public class Assento {
     private final String codigo;
     private final Sala sala;

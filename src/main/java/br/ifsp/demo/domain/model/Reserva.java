@@ -1,12 +1,13 @@
 package br.ifsp.demo.domain.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
+@Data
 public class Reserva {
 
     private Long id;
