@@ -1,8 +1,11 @@
 package br.ifsp.demo.domain.model;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Sala {
     private final Integer numeroSala;
     private List<Assento> assentos;
@@ -12,7 +15,4 @@ public class Sala {
         this.assentos = new ArrayList<>();
     }
 
-    public Integer getNumeroSala() {
-        return numeroSala;
-    }
 }
