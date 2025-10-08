@@ -1,6 +1,6 @@
 package br.ifsp.demo.security.auth;
 
-import br.ifsp.demo.exception.EntityAlreadyExistsException;
+import br.ifsp.demo.domain.exception.EntityAlreadyExistsException;
 import br.ifsp.demo.security.config.JwtService;
 import br.ifsp.demo.security.user.JpaUserRepository;
 import br.ifsp.demo.security.user.Role;
