@@ -50,7 +50,7 @@ class ReservaIngressoServiceTest {
         sala.getAssentos().add(new Assento( "A2"));
 
         sessaoDomain = new Sessao(new Filme("Filme legal", 90),
-                new Horario(LocalDate.now().plusDays(1), LocalTime.of(20,0)),
+                new Horario(LocalDate.of(2025, 10, 9).plusDays(1), LocalTime.of(20,0)),
                 sala
         );
 
@@ -80,6 +80,15 @@ class ReservaIngressoServiceTest {
         verify(sessaoRepository).save(any(SessaoEntity.class));
     }
 
-
+    @Test
+    @DisplayName("Deve lançar AssentoIndisponivelException quando o assento já estiver reservado")
+    public void deveLancarAssentoIndisponivelExceptionQuandoAssentoJaEstiverReservado(){
+        String assentoJaReservado = "A1";
+        sessaoDomain.reservarAssento(assentoJaReservado);
+        Assertions.assertThrows(AssentoIndisponivelException.class, () ->{
+            reservaIngressoService.reservarIngresso(sessaoId, assentoJaReservado);
+        });
+        verify(sessaoRepository, never()).save(any(SessaoEntity.class));
+    }
 
 }
