@@ -1,5 +1,3 @@
-// Localização: src/main/java/br/ifsp/demo/domain/service/ValidadorDataDisponivelService.java
-
 package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
