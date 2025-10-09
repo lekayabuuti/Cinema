@@ -4,6 +4,7 @@ import br.ifsp.demo.domain.exception.DataInvalidaException;
 import br.ifsp.demo.domain.exception.DataPassadaException;
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
+import br.ifsp.demo.domain.service.ValidadorDataDisponivelService;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
 import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
@@ -17,6 +18,8 @@ import java.util.List;
 
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
@@ -24,8 +27,9 @@ import static org.mockito.Mockito.when;
 public class SessaoServiceTest {
     @Mock
     SessaoRepository sessaoRepository;
+
     @Mock
-    DataIndisponivelRepository dataIndisponivelRepository;
+    ValidadorDataDisponivelService validador;
 
 
     @InjectMocks
@@ -99,13 +103,15 @@ public class SessaoServiceTest {
     @Test
     @DisplayName("Deve acionar SessaoIndisponivelException quando data estiver indiponível para sessões")
     void deveLancarExcecaoQuandoDataEstiverIndisponivel(){
-        LocalDate dataIndisponivel = LocalDate.of(2020, 1, 1);
+        LocalDate dataIndisponivel = LocalDate.now().plusDays(1);
         LocalDate dataFinal = dataIndisponivel.plusDays(1);
 
-        when(dataIndisponivelRepository.existsByData(dataIndisponivel)).thenReturn(true);
+        doThrow(new SessaoIndisponivelException("Data indisponivel")).when(validador).validar(dataIndisponivel);
 
+        // ASSERT
+        // Esperamos que o Service capture e repasse a exceção do Validador.
         assertThatThrownBy(() -> service.buscarSessoesEntre(dataIndisponivel, dataFinal))
-        .isInstanceOf(SessaoIndisponivelException.class);
+                .isInstanceOf(SessaoIndisponivelException.class);
     }
 
     //29
