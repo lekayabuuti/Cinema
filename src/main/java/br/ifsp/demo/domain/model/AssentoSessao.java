@@ -8,11 +8,27 @@ import lombok.Setter;
 public class AssentoSessao {
     private final Assento assento;
     private final Sessao sessao;
-    private Status status = Status.DISPONIVEL;
+    private Status status;
 
-    public AssentoSessao(Assento assento, Sessao sessao) {
+    private AssentoSessao(Assento assento, Sessao sessao) {
         this.assento = assento;
         this.sessao = sessao;
+    }
+
+    public static AssentoSessao criarNovo(Assento assento, Sessao sessao){
+        AssentoSessao novoAssentoSessao = new AssentoSessao(assento, sessao);
+        novoAssentoSessao.status = Status.DISPONIVEL;
+        return novoAssentoSessao;
+    }
+
+    /**
+     * Para RECONSTRUIR um AssentoSessao a partir do banco de dados
+     * Usado pela camada de persistencia (mapper).
+     */
+    public static AssentoSessao reconstituir(Assento assento, Sessao sessao, Status status){
+        AssentoSessao assentoSessao = new AssentoSessao(assento, sessao);
+        assentoSessao.status = status;
+        return assentoSessao;
     }
 
     public boolean estaDisponivel() {
