@@ -1,10 +1,10 @@
-package br.ifsp.demo.security.auth;
+package br.ifsp.demo.infrastructure.security.auth;
 
 import br.ifsp.demo.domain.exception.EntityAlreadyExistsException;
-import br.ifsp.demo.security.config.JwtService;
-import br.ifsp.demo.security.user.JpaUserRepository;
-import br.ifsp.demo.security.user.Role;
-import br.ifsp.demo.security.user.User;
+import br.ifsp.demo.infrastructure.security.config.JwtService;
+import br.ifsp.demo.infrastructure.security.user.JpaUserRepository;
+import br.ifsp.demo.infrastructure.security.user.Role;
+import br.ifsp.demo.infrastructure.security.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
