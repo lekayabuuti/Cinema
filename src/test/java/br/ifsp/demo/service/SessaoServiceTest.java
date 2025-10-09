@@ -33,6 +33,8 @@ public class SessaoServiceTest {
 
     //#47
     @Test
+    @Tag("UnitTest")
+    @Tag("Functional")
     @DisplayName("Deve retornar sessões quando data inicial for menor que a data final")
     void retornarSessaoCinemaComDataInicialMenorQueDataFinal() {
         LocalDate dataInicial = LocalDate.now();
@@ -48,6 +50,8 @@ public class SessaoServiceTest {
 
     //46
     @Test
+    @Tag("UnitTest")
+    @Tag("Functional")
     @DisplayName("Deve retornar sessões quando data inicial for igual a data final")
     void retornarSessaoCinemaComDataInicialIgualDataFinal() {
         LocalDate dataInicial = LocalDate.now();
@@ -65,6 +69,8 @@ public class SessaoServiceTest {
 
     //35
     @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
     @DisplayName("Deve retornar lista vazia quando nao existir nenhuma sessao entre as datas")
     void  retornarListaVaziaSeNaoExistirNenhumaSessao(){
         LocalDate dataInicial = LocalDate.now();

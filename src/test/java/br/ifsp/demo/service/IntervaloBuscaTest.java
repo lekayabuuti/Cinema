@@ -21,6 +21,8 @@ public class IntervaloBuscaTest {
     SessaoService service;
     //36
     @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
     @DisplayName("Não deve retornar sessões quando data inicial for 7 dias maior que a data atual")
     void naoRetornarSessaoCinemaComDataInicialSeteDiasMaiorQueDataAtual() {
         LocalDate dataInicial = LocalDate.now().plusDays(8);
@@ -32,6 +34,8 @@ public class IntervaloBuscaTest {
 
     //41
     @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
     @DisplayName("Não deve retornar sessões quando data final for 7 dias maior que a data atual")
     void naoRetornarSessaoCinemaComDataFinalSeteDiasMaiorQueDataAtual(){
         LocalDate dataInicial = LocalDate.now();
@@ -43,6 +47,8 @@ public class IntervaloBuscaTest {
 
     //29
     @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
     @DisplayName("Deve acionar DataPassadaException quando data estiver indiponível para sessões")
     void deveLancarExcecaoQuandoDataForUmaDataPassada(){
         LocalDate dataPassada = LocalDate.now().minusDays(1);
@@ -55,6 +61,8 @@ public class IntervaloBuscaTest {
 
     //42
     @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
     @DisplayName("Deve acionar DataInvalidaException quando data final for antes de data inicial")
     void  deveLancarExcecaoQuandoDataFinalMenorQueDataInicial(){
         LocalDate dataInicial = LocalDate.now().plusDays(2);
@@ -66,6 +74,7 @@ public class IntervaloBuscaTest {
 
     //44
     @Test
+    @Tag("UnitTest")
     @DisplayName("Deve acionar NullPointerException quando data inicial for null")
     void  deveLancarExcecaoQuandoDataInicialForNull(){
         LocalDate dataInicial = null;
@@ -77,6 +86,7 @@ public class IntervaloBuscaTest {
 
     //45
     @Test
+    @Tag("UnitTest")
     @DisplayName("Deve acionar NullPointerException quando data final for null")
     void  deveLancarExcecaoQuandoDataFinalForNull(){
         LocalDate dataInicial = LocalDate.now().plusDays(1);

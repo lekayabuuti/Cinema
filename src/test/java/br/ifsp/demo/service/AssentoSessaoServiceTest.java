@@ -34,7 +34,10 @@ public class AssentoSessaoServiceTest {
         service = new AssentoSessaoService(repository, mapper);
     }
 
+    //19
     @Test
+    @Tag("UnitTest")
+    @Tag("Functional")
     @DisplayName("Deve retornar todos os assentos da sessão, disponíveis ou não")
     void deveRetornarTodosOsAssentosDaSessao() {
         Long sessaoId = 1L;
@@ -52,7 +55,10 @@ public class AssentoSessaoServiceTest {
                 .containsExactlyInAnyOrder(Status.DISPONIVEL, Status.RESERVADO);
     }
 
+    //20
     @Test
+    @Tag("UnitTest")
+    @Tag("Functional")
     @DisplayName("Deve retornar todos os assentos disponíveis da sessão")
     void deveRetornarTodosOsAssentosDisponiveisDaSessao() {
         Long sessaoId = 1L;
