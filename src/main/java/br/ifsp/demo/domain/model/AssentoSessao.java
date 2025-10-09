@@ -8,7 +8,6 @@ import lombok.Setter;
 public class AssentoSessao {
     private final Assento assento;
     private final Sessao sessao;
-    @Setter
     private Status status = Status.DISPONIVEL;
 
     public AssentoSessao(Assento assento, Sessao sessao) {
