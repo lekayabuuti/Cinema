@@ -1,6 +1,6 @@
-package br.ifsp.demo.infrastructure.repository;
+package br.ifsp.demo.infrastructure.persistence.repository;
 
-import br.ifsp.demo.infrastructure.entity.SessaoEntity;
+import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.time.LocalDate;

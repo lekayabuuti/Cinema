@@ -3,9 +3,9 @@ package br.ifsp.demo.domain.service;
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.domain.model.Ingresso;
 import br.ifsp.demo.domain.model.Sessao;
-import br.ifsp.demo.infrastructure.entity.SessaoEntity;
-import br.ifsp.demo.infrastructure.mapper.SessaoMapper;
-import br.ifsp.demo.infrastructure.repository.SessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
+import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
+import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

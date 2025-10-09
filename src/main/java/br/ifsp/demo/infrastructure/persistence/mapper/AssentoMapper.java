@@ -1,7 +1,7 @@
-package br.ifsp.demo.infrastructure.mapper;
+package br.ifsp.demo.infrastructure.persistence.mapper;
 
 import br.ifsp.demo.domain.model.Assento;
-import br.ifsp.demo.infrastructure.entity.AssentoEntity;
+import br.ifsp.demo.infrastructure.persistence.entity.AssentoEntity;
 import org.springframework.stereotype.Component;
 
 @Component

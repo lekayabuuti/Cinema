@@ -1,4 +1,4 @@
-package br.ifsp.demo.infrastructure.entity;
+package br.ifsp.demo.infrastructure.persistence.entity;
 
 import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.Assento;

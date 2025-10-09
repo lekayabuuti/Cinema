@@ -1,8 +1,8 @@
 package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.model.Assento;
-import br.ifsp.demo.infrastructure.mapper.AssentoMapper;
-import br.ifsp.demo.infrastructure.repository.AssentoRepository;
+import br.ifsp.demo.infrastructure.persistence.mapper.AssentoMapper;
+import br.ifsp.demo.infrastructure.persistence.repository.AssentoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

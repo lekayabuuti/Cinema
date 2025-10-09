@@ -1,7 +1,7 @@
-package br.ifsp.demo.infrastructure.mapper;
+package br.ifsp.demo.infrastructure.persistence.mapper;
 
 import br.ifsp.demo.domain.model.Sala;
-import br.ifsp.demo.infrastructure.entity.SalaEntity;
+import br.ifsp.demo.infrastructure.persistence.entity.SalaEntity;
 
 public class SalaMapper {
 

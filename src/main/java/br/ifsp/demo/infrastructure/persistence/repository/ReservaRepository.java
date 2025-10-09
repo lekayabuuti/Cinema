@@ -1,4 +1,4 @@
-package br.ifsp.demo.infrastructure.repository;
+package br.ifsp.demo.infrastructure.persistence.repository;
 
 import br.ifsp.demo.domain.model.Reserva;
 import org.springframework.data.jpa.repository.JpaRepository;

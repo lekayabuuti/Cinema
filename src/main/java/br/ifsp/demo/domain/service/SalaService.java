@@ -1,9 +1,9 @@
 package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.model.Sala;
-import br.ifsp.demo.infrastructure.entity.SalaEntity;
-import br.ifsp.demo.infrastructure.mapper.SalaMapper;
-import br.ifsp.demo.infrastructure.repository.SalaRepository;
+import br.ifsp.demo.infrastructure.persistence.entity.SalaEntity;
+import br.ifsp.demo.infrastructure.persistence.mapper.SalaMapper;
+import br.ifsp.demo.infrastructure.persistence.repository.SalaRepository;
 import org.springframework.stereotype.Service;
 
 @Service

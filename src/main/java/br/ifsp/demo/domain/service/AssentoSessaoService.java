@@ -2,9 +2,9 @@ package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.AssentoSessao;
-import br.ifsp.demo.infrastructure.entity.AssentoSessaoEntity;
-import br.ifsp.demo.infrastructure.mapper.AssentoSessaoMapper;
-import br.ifsp.demo.infrastructure.repository.AssentoSessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.entity.AssentoSessaoEntity;
+import br.ifsp.demo.infrastructure.persistence.mapper.AssentoSessaoMapper;
+import br.ifsp.demo.infrastructure.persistence.repository.AssentoSessaoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

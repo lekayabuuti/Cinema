@@ -1,6 +1,6 @@
-package br.ifsp.demo.infrastructure.repository;
+package br.ifsp.demo.infrastructure.persistence.repository;
 
-import br.ifsp.demo.infrastructure.entity.DataIndisponivelEntity;
+import br.ifsp.demo.infrastructure.persistence.entity.DataIndisponivelEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDate;
 

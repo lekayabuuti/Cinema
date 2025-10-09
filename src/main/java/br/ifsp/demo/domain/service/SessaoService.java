@@ -3,10 +3,10 @@ package br.ifsp.demo.domain.service;
 import br.ifsp.demo.domain.exception.DataInvalidaException;
 import br.ifsp.demo.domain.exception.DataPassadaException;
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
-import br.ifsp.demo.infrastructure.repository.DataIndisponivelRepository;
-import br.ifsp.demo.infrastructure.repository.SessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
 import br.ifsp.demo.domain.model.Sessao;
-import br.ifsp.demo.infrastructure.mapper.SessaoMapper;
+import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
