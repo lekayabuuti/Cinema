@@ -23,7 +23,9 @@ public class Sessao {
         this.horario = horario;
         this.sala = sala;
         // pra cada assento físico na sala, cria um controle de status para esta sessão.
-        this.assentosDaSessao = new ArrayList<>();
+        this.assentosDaSessao = sala.getAssentos().stream()
+                .map(assento -> AssentoSessao.criarNovo(assento, this))
+                .collect(Collectors.toList());
     }
 
     /**
