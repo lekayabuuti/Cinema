@@ -16,12 +16,11 @@ public class AssentoSessaoMapper {
     }
 
     public AssentoSessao toDomain(AssentoSessaoEntity entity) {
-        AssentoSessao assentoSessao = new AssentoSessao(
+        return AssentoSessao.reconstituir(
                 assentoMapper.toDomain(entity.getAssento()),
-                sessaoMapper.toDomain(entity.getSessao())
+                sessaoMapper.toDomain(entity.getSessao()),
+                entity.getStatus()
         );
-        assentoSessao.setStatus(entity.getStatus());
-        return assentoSessao;
     }
 
     public AssentoSessaoEntity toEntity(AssentoSessao domain) {
