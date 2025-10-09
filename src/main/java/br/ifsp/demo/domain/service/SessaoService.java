@@ -4,7 +4,7 @@ import br.ifsp.demo.domain.exception.DataInvalidaException;
 import br.ifsp.demo.domain.exception.DataPassadaException;
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
-import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
+import br.ifsp.demo.domain.repository.SessaoRepository;
 import br.ifsp.demo.domain.model.Sessao;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,7 @@ public class SessaoService {
     public List<Sessao> buscarSessoesEntre(LocalDate dataInicial, LocalDate dataFinal) {
         validacao(dataInicial, dataFinal);
 
-        return sessaoRepository.findByDataBetween(dataInicial,dataFinal)
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
+        return sessaoRepository.findByDataBetween(dataInicial, dataFinal);
     }
 
 
