@@ -1,5 +1,6 @@
 package br.ifsp.demo.service;
 
+import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import br.ifsp.demo.domain.service.ReservaIngressoService;
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
@@ -86,4 +87,32 @@ class ReservaIngressoServiceTest {
         verify(sessaoRepository, never()).save(any(SessaoEntity.class));
     }
 
+    @Test
+    @DisplayName("Deve lançar SessaoIndisponivelException quando tentar reservar um ou mais ingressos em uma sessão encerrada")
+    void deveLancarSessaoIndisponivelExceptionQuandoTentarReservarIngressoEmUmaSessaoEncerrada(){
+        Sala sala = new Sala(1);
+        sala.getAssentos().add(new Assento("A1"));
+
+        DataHora dataHoraPassada = new DataHora(
+                LocalDate.of(2025, 10, 1),
+                LocalTime.of(20, 0)
+        );
+
+        Sessao sessaoEncerrada = new Sessao(
+                new Filme("Shrek", 100),
+                dataHoraPassada,
+                sala
+        );
+
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoEncerrada);
+
+        String assentoParaReservar = "A1";
+
+        Assertions.assertThrows(SessaoIndisponivelException.class, () -> {
+            reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
+        });
+
+        verify(sessaoRepository, never()).save(any());
+
+    }
 }
