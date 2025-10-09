@@ -1,6 +1,7 @@
 package br.ifsp.demo.domain.model;
 
 import br.ifsp.demo.domain.enumerations.Status;
+import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,7 +44,7 @@ public class Sessao {
 
         // 2- Aplica a regra de negocio (verificar se esta disponivel SOMENTE... por enquanto)
         if (!assentoParaReservar.estaDisponivel()){
-            throw new RuntimeException("Assento já está reservado");
+            throw new AssentoIndisponivelException("Assento já está reservado");
         }
 
         //3 manda o objeto se reservar (encapsulamento)
