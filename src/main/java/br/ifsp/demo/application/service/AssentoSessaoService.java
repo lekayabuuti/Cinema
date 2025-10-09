@@ -1,4 +1,4 @@
-package br.ifsp.demo.aplication.service;
+package br.ifsp.demo.application.service;
 
 import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.AssentoSessao;

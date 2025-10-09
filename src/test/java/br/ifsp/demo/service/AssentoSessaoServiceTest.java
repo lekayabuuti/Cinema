@@ -1,6 +1,6 @@
 package br.ifsp.demo.service;
 
-import br.ifsp.demo.aplication.service.AssentoSessaoService;
+import br.ifsp.demo.application.service.AssentoSessaoService;
 import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.infrastructure.entity.AssentoSessaoEntity;

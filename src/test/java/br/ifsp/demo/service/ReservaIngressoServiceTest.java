@@ -1,24 +1,19 @@
 package br.ifsp.demo.service;
 
-import br.ifsp.demo.aplication.service.ReservaIngressoService;
-import br.ifsp.demo.domain.enumerations.Status;
+import br.ifsp.demo.application.service.ReservaIngressoService;
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
-import br.ifsp.demo.infrastructure.entity.IngressoEntity;
 import br.ifsp.demo.infrastructure.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.mapper.SessaoMapper;
 import br.ifsp.demo.infrastructure.repository.SessaoRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;

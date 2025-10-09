@@ -1,4 +1,4 @@
-package br.ifsp.demo.aplication.service;
+package br.ifsp.demo.application.service;
 
 import br.ifsp.demo.domain.exception.DataInvalidaException;
 import br.ifsp.demo.domain.exception.DataPassadaException;
