@@ -1,6 +1,6 @@
 package br.ifsp.demo.service;
 
-import br.ifsp.demo.application.service.ReservaIngressoService;
+import br.ifsp.demo.domain.service.ReservaIngressoService;
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.infrastructure.entity.SessaoEntity;

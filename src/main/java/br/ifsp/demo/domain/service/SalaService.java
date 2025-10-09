@@ -1,4 +1,4 @@
-package br.ifsp.demo.application.service;
+package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.model.Sala;
 import br.ifsp.demo.infrastructure.entity.SalaEntity;

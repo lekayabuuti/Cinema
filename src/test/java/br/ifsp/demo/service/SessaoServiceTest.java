@@ -1,5 +1,5 @@
 package br.ifsp.demo.service;
-import br.ifsp.demo.application.service.SessaoService;
+import br.ifsp.demo.domain.service.SessaoService;
 import br.ifsp.demo.domain.exception.DataInvalidaException;
 import br.ifsp.demo.domain.exception.DataPassadaException;
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;

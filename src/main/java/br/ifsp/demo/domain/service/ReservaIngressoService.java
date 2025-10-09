@@ -1,4 +1,4 @@
-package br.ifsp.demo.application.service;
+package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.domain.model.Ingresso;
