@@ -19,4 +19,14 @@ public class AssentoSessao {
     public boolean estaDisponivel() {
         return this.status == Status.DISPONIVEL;
     }
+
+    /**
+     * Altera o estado do assento para RESERVADO
+     * Encapsula a logica de transicao de estado
+     */
+    public void reservar() {
+        // abre espaco para adicionar regras. Exemplo: "if(status != DSIPONIVEL) throw...
+        this.status = Status.RESERVADO;
+    }
+
 }
