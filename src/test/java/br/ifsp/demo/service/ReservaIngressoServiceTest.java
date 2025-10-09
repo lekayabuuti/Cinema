@@ -69,6 +69,9 @@ class ReservaIngressoServiceTest {
         // qnd o mapper for converter a entidade falsa, retornará objeto de dominio compleeto
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDeDominio);
 
+        // qnd o mapper for converter o objeto de domínio DE VOLTA para uma entidade,
+        // retorna uma entidade vazia (não-nula) para o metodo save
+        when(sessaoMapper.toEntity(any(Sessao.class))).thenReturn(new SessaoEntity());
 
         // ACT / WHEN / Quando...
 
