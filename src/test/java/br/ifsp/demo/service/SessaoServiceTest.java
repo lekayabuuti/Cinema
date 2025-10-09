@@ -69,7 +69,7 @@ public class SessaoServiceTest {
 
         assertThat(resultado).isNotEmpty();
         assertThat(resultado.get(0).getFilme().nome()).isEqualTo("Filme Teste");
-        assertThat(resultado.get(0).getHorario().hora()).isEqualTo(LocalTime.of(20, 0));
+        assertThat(resultado.get(0).getDataHora().hora()).isEqualTo(LocalTime.of(20, 0));
         assertThat(resultado.get(0).getSala().getNumeroSala()).isEqualTo(1);
     }
 

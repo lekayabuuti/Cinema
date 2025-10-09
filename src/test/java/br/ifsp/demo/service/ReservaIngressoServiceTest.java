@@ -45,7 +45,7 @@ class ReservaIngressoServiceTest {
         sala.getAssentos().add(new Assento( "A2"));
 
         sessaoDomain = new Sessao(new Filme("Filme legal", 90),
-                new Horario(LocalDate.of(2025, 10, 9).plusDays(1), LocalTime.of(20,0)),
+                new DataHora(LocalDate.of(2025, 10, 9).plusDays(1), LocalTime.of(20,0)),
                 sala
         );
 

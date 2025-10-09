@@ -25,7 +25,7 @@ public class Ingresso {
         return assentoSessao.getSessao().getFilme();
     }
 
-    public Horario getHorario() {
-        return assentoSessao.getSessao().getHorario();
+    public DataHora getHorario() {
+        return assentoSessao.getSessao().getDataHora();
     }
 }
