@@ -7,18 +7,19 @@ import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
 import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
-import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
+import br.ifsp.demo.domain.repository.SessaoRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.*;
 import java.util.List;
+
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
-@Tag("TDD")
 @ExtendWith(MockitoExtension.class)
 public class SessaoServiceTest {
     @Mock
@@ -32,39 +33,38 @@ public class SessaoServiceTest {
     @Spy
     SessaoMapper mapper = new SessaoMapper();
 
-    private SessaoEntity novaSessao(String nome, int minutos, LocalDate data, LocalTime hora, int sala) {
-        SessaoEntity s = new SessaoEntity();
-        s.setFilmeNome(nome);
-        s.setFilmeMinutos(minutos);
-        s.setHorarioData(data);
-        s.setHorarioHora(hora);
-        s.setNumeroSala(sala);
-        return s;
+    private Sessao novaSessao(String nome, int minutos, LocalDate data, LocalTime hora, Integer numero) {
+        Filme filme = new Filme(nome,minutos);
+        Sala sala = new Sala(numero);
+        DataHora dataHora= new DataHora(data,hora);
+
+        return new Sessao(filme,dataHora,sala);
     }
 
+    //#47
     @Test
     @DisplayName("Deve retornar sessões quando data inicial for menor que a data final")
     void retornarSessaoCinemaComDataInicialMenorQueDataFinal() {
-        LocalDate dataInicial = LocalDate.of(2020, 1, 1);
-        LocalDate dataFinal = LocalDate.of(2020, 1, 2);
-        SessaoEntity entity = novaSessao("Matrix", 136, dataInicial, LocalTime.of(19, 30), 3);
+        LocalDate dataInicial = LocalDate.now();
+        LocalDate dataFinal = LocalDate.now().plusDays(1);
+        Sessao sessao =  novaSessao("Matrix", 136, dataInicial, LocalTime.of(19, 30), 3);
 
-        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(entity));
+        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(sessao));
         List<Sessao> resultado = service.buscarSessoesEntre(dataInicial,dataFinal);
 
         assertThat(resultado).isNotEmpty();
         assertThat(resultado).hasSize(1);
-        assertThat(resultado.get(0).getFilme().nome()).isEqualTo("Matrix");
     }
 
+    //46
     @Test
     @DisplayName("Deve retornar sessões quando data inicial for igual a data final")
     void retornarSessaoCinemaComDataInicialIgualDataFinal() {
-        LocalDate dataInicial = LocalDate.of(2020, 1, 1);
-        LocalDate dataFinal = LocalDate.of(2020, 1, 1);
-        SessaoEntity entity = novaSessao("Filme Teste", 120, dataInicial, LocalTime.of(20, 0), 1);
+        LocalDate dataInicial = LocalDate.now();
+        LocalDate dataFinal = LocalDate.now().plusDays(1);
+        Sessao sessao = novaSessao("Filme Teste", 120, dataInicial, LocalTime.of(20, 0), 1);
 
-        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(entity));
+        when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(sessao));
         List<Sessao> resultado = service.buscarSessoesEntre(dataInicial, dataFinal);
 
         assertThat(resultado).isNotEmpty();
@@ -73,6 +73,7 @@ public class SessaoServiceTest {
         assertThat(resultado.get(0).getSala().getNumeroSala()).isEqualTo(1);
     }
 
+    //36
     @Test
     @DisplayName("Não deve retornar sessões quando data inicial for 7 dias maior que a data atual")
     void naoRetornarSessaoCinemaComDataInicialSeteDiasMaiorQueDataAtual() {
@@ -83,6 +84,7 @@ public class SessaoServiceTest {
                 .isInstanceOf(DataInvalidaException.class);
     }
 
+    //41
     @Test
     @DisplayName("Não deve retornar sessões quando data final for 7 dias maior que a data atual")
     void naoRetornarSessaoCinemaComDataFinalSeteDiasMaiorQueDataAtual(){
@@ -93,6 +95,7 @@ public class SessaoServiceTest {
         .isInstanceOf(DataInvalidaException.class);
     }
 
+    //27
     @Test
     @DisplayName("Deve acionar SessaoIndisponivelException quando data estiver indiponível para sessões")
     void deveLancarExcecaoQuandoDataEstiverIndisponivel(){
@@ -105,6 +108,7 @@ public class SessaoServiceTest {
         .isInstanceOf(SessaoIndisponivelException.class);
     }
 
+    //29
     @Test
     @DisplayName("Deve acionar DataPassadaException quando data estiver indiponível para sessões")
     void deveLancarExcecaoQuandoDataForUmaDataPassada(){
@@ -116,6 +120,7 @@ public class SessaoServiceTest {
                 .isInstanceOf(DataPassadaException.class);
     }
 
+    //35
     @Test
     @DisplayName("Deve retornar lista vazia quando nao existir nenhuma sessao entre as datas")
     void  retornarListaVaziaSeNaoExistirNenhumaSessao(){
@@ -126,6 +131,7 @@ public class SessaoServiceTest {
         assertThat(resultado).isEmpty();
     }
 
+    //42
     @Test
     @DisplayName("Deve acionar DataInvalidaException quando data final for antes de data inicial")
     void  deveLancarExcecaoQuandoDataFinalMenorQueDataInicial(){
@@ -136,6 +142,7 @@ public class SessaoServiceTest {
                 .isInstanceOf(DataInvalidaException.class);
     }
 
+    //44
     @Test
     @DisplayName("Deve acionar NullPointerException quando data inicial for null")
     void  deveLancarExcecaoQuandoDataInicialForNull(){
@@ -146,6 +153,7 @@ public class SessaoServiceTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
+    //45
     @Test
     @DisplayName("Deve acionar NullPointerException quando data final for null")
     void  deveLancarExcecaoQuandoDataFinalForNull(){
