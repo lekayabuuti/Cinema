@@ -60,14 +60,14 @@ class ReservaIngressoServiceTest {
         //configuração dos mocks
         when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
-        when(sessaoMapper.toEntity(any(Sessao.class))).thenReturn(new SessaoEntity());
     }
 
     @Test
     @DisplayName("Deve reservar um ingresso com sucesso, se a sessão e o assento estiverem disponiveis")
     public void deveReservarComSucessoQuandoSessaoEAssentoEstaoDisponiveis(){
-
+        //ARRANGE
         String assentoParaReservar = "A1";
+        when(sessaoMapper.toEntity(any(Sessao.class))).thenReturn(new SessaoEntity());
 
         //ACT / WHEN / Quando...
         Ingresso ingressoGerado = reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
