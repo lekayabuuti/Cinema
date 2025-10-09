@@ -1,9 +1,12 @@
 package br.ifsp.demo.domain.model;
 
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
+import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,11 @@ public class Sessao {
                 .collect(Collectors.toList());
     }
 
+    public boolean isEncerrada(){
+        LocalDateTime dataHoraDaSessao = LocalDateTime.of(this.dataHora.data(), this.dataHora.hora());
+        return dataHoraDaSessao.isBefore(LocalDateTime.now());
+    }
+
     /**
      * Encontra um assento pelo código, aplica a regra de negócio de reserva
      * e altera o estado do assento.
@@ -34,6 +42,10 @@ public class Sessao {
      * @return O objeto AssentoSessao que foi reservado.
      */
     public AssentoSessao reservarAssento (String codigoAssento){
+
+        if (isEncerrada())
+            throw new SessaoIndisponivelException("Sessão não está mais disponível (já ocorreu)");
+
         //1 - Encontra o assento desejado na lista de assentos DESSA sessao
         AssentoSessao assentoParaReservar = this.assentosDaSessao.stream()
                 .filter(assentoSessao -> assentoSessao.getAssento().getCodigo().equals(codigoAssento))

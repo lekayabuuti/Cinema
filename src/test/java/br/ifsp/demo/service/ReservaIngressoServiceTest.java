@@ -1,5 +1,6 @@
 package br.ifsp.demo.service;
 
+import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import br.ifsp.demo.domain.service.ReservaIngressoService;
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
@@ -54,7 +55,6 @@ class ReservaIngressoServiceTest {
 
         //configuração dos mocks
         when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
-        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
     }
 
     @Test
@@ -62,7 +62,9 @@ class ReservaIngressoServiceTest {
     public void deveReservarComSucessoQuandoSessaoEAssentoEstaoDisponiveis(){
         //ARRANGE
         String assentoParaReservar = "A1";
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(sessaoMapper.toEntity(any(Sessao.class))).thenReturn(new SessaoEntity());
+
 
         //ACT / WHEN / Quando...
         Ingresso ingressoGerado = reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
@@ -80,10 +82,40 @@ class ReservaIngressoServiceTest {
     public void deveLancarAssentoIndisponivelExceptionQuandoAssentoJaEstiverReservado(){
         String assentoJaReservado = "A1";
         sessaoDomain.reservarAssento(assentoJaReservado);
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
+
         Assertions.assertThrows(AssentoIndisponivelException.class, () ->{
             reservaIngressoService.reservarIngresso(sessaoId, assentoJaReservado);
         });
         verify(sessaoRepository, never()).save(any(SessaoEntity.class));
     }
 
+    @Test
+    @DisplayName("Deve lançar SessaoIndisponivelException quando tentar reservar um ou mais ingressos em uma sessão encerrada")
+    void deveLancarSessaoIndisponivelExceptionQuandoTentarReservarIngressoEmUmaSessaoEncerrada(){
+        Sala sala = new Sala(1);
+        sala.getAssentos().add(new Assento("A1"));
+
+        DataHora dataHoraPassada = new DataHora(
+                LocalDate.of(2025, 10, 1),
+                LocalTime.of(20, 0)
+        );
+
+        Sessao sessaoEncerrada = new Sessao(
+                new Filme("Shrek", 100),
+                dataHoraPassada,
+                sala
+        );
+
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoEncerrada);
+
+        String assentoParaReservar = "A1";
+
+        Assertions.assertThrows(SessaoIndisponivelException.class, () -> {
+            reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
+        });
+
+        verify(sessaoRepository, never()).save(any());
+
+    }
 }
