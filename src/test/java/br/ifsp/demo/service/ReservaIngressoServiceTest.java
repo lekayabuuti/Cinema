@@ -55,7 +55,6 @@ class ReservaIngressoServiceTest {
 
         //configuração dos mocks
         when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
-        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
     }
 
     @Test
@@ -63,7 +62,9 @@ class ReservaIngressoServiceTest {
     public void deveReservarComSucessoQuandoSessaoEAssentoEstaoDisponiveis(){
         //ARRANGE
         String assentoParaReservar = "A1";
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(sessaoMapper.toEntity(any(Sessao.class))).thenReturn(new SessaoEntity());
+
 
         //ACT / WHEN / Quando...
         Ingresso ingressoGerado = reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
@@ -81,6 +82,8 @@ class ReservaIngressoServiceTest {
     public void deveLancarAssentoIndisponivelExceptionQuandoAssentoJaEstiverReservado(){
         String assentoJaReservado = "A1";
         sessaoDomain.reservarAssento(assentoJaReservado);
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
+
         Assertions.assertThrows(AssentoIndisponivelException.class, () ->{
             reservaIngressoService.reservarIngresso(sessaoId, assentoJaReservado);
         });
