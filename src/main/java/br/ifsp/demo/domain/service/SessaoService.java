@@ -1,8 +1,6 @@
 package br.ifsp.demo.domain.service;
 
-import br.ifsp.demo.domain.exception.DataInvalidaException;
-import br.ifsp.demo.domain.exception.DataPassadaException;
-import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
+import br.ifsp.demo.domain.model.IntervaloBusca;
 import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
 import br.ifsp.demo.domain.repository.SessaoRepository;
 import br.ifsp.demo.domain.model.Sessao;
@@ -14,57 +12,25 @@ import java.util.List;
 
 @Service
 public class SessaoService {
-    private final SessaoMapper mapper;
     private final SessaoRepository sessaoRepository;
-    private final DataIndisponivelRepository dataIndisponivelRepository;
-    private static final int LIMITE_DIAS = 7;
+    private final ValidadorDataDisponivelService validator;
 
 
-    public SessaoService(SessaoRepository repository, SessaoMapper mapper, DataIndisponivelRepository dataIndisponivelRepository) {
+    public SessaoService(SessaoRepository repository, ValidadorDataDisponivelService validadorDataDisponivelService) {
         this.sessaoRepository = repository;
-        this.mapper = mapper;
-        this.dataIndisponivelRepository = dataIndisponivelRepository;
+        this.validator = validadorDataDisponivelService;
     }
 
     public List<Sessao> buscarSessoesEntre(LocalDate dataInicial, LocalDate dataFinal) {
-        validacao(dataInicial, dataFinal);
+        IntervaloBusca periodo = new IntervaloBusca(dataInicial, dataFinal);
+
+        validator.validar (periodo.dataInicial());
+        validator.validar (periodo.dataFinal());
 
         return sessaoRepository.findByDataBetween(dataInicial, dataFinal);
     }
 
 
-    private void validarDataLimite(LocalDate data, String tipo) {
-        if (data.isAfter(LocalDate.now().plusDays(LIMITE_DIAS))) {
-            throw new DataInvalidaException(tipo + " não pode ser superior a " + LIMITE_DIAS + " dias da data atual.");
-        }
-    }
 
-    private void validarDataDisponivel(LocalDate data) {
-        if(dataIndisponivelRepository.existsByData(data)){
-            throw new SessaoIndisponivelException("Data "+ data +" indisponível para sessões");
-        }
-    }
-
-    private void validarDataExpiracao(LocalDate data) {
-        if (data.isBefore(LocalDate.now())) {
-            throw new DataPassadaException("Datas anteriores à atual não são permitidas.");
-        }
-    }
-
-
-    private void validacao(LocalDate dataInicial, LocalDate dataFinal) {
-        if(dataInicial.isAfter(dataFinal)) {
-            throw new DataInvalidaException("Data final não pode ser anterior à data inicial.");
-        }
-
-        validarDataLimite(dataInicial,"Data inicial");
-        validarDataLimite(dataFinal,"Data final");
-
-        validarDataDisponivel(dataInicial);
-        validarDataDisponivel(dataFinal);
-
-        validarDataExpiracao(dataInicial);
-        validarDataExpiracao(dataFinal);
-    }
 
 }
