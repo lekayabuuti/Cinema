@@ -1,6 +1,7 @@
 package br.ifsp.demo.service;
 
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
+import br.ifsp.demo.domain.exception.SessaoLotadaException;
 import br.ifsp.demo.domain.service.ReservaIngressoService;
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
@@ -117,5 +118,20 @@ class ReservaIngressoServiceTest {
 
         verify(sessaoRepository, never()).save(any());
 
+    }
+
+    @Test
+    @DisplayName("Deve lançar SessaoLotadaException quando tentar reservar um ou mais ingressos em uma sessão encerrada")
+    void deveLancarSessaoLotadaExceptionQuandoTentarReservarIngressoEmUmaSessaoLotada(){
+        sessaoDomain.reservarAssento("A1");
+        sessaoDomain.reservarAssento("A2");
+
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
+
+        Assertions.assertThrows(SessaoLotadaException.class, () -> {
+            reservaIngressoService.reservarIngresso(sessaoId, "A1");
+        });
+
+        verify(sessaoRepository, never()).save(any());
     }
 }
