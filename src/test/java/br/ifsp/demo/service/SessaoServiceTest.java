@@ -1,5 +1,4 @@
 package br.ifsp.demo.service;
-import br.ifsp.demo.domain.exception.SessaoInativaException;
 import br.ifsp.demo.domain.service.SessaoService;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.domain.service.ValidadorDataDisponivelService;
@@ -10,10 +9,8 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.*;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
