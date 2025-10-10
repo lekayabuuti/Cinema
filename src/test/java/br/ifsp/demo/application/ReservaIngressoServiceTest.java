@@ -1,10 +1,7 @@
 package br.ifsp.demo.application;
 
-import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
-import br.ifsp.demo.domain.exception.SessaoInexistenteException;
-import br.ifsp.demo.domain.exception.SessaoLotadaException;
+import br.ifsp.demo.domain.exception.*;
 import br.ifsp.demo.application.service.ReservaIngressoService;
-import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
@@ -182,5 +179,19 @@ class ReservaIngressoServiceTest {
             reservaIngressoService.reservarIngresso(sessaoId, assentoInvalido);
         });
         verifyNoInteractions(sessaoRepository, sessaoMapper);
+    }
+
+    @Test
+    @DisplayName("Deve lançar AssentoInexistenteException quando o assento não for encontrado na sessão")
+    void deveLancarAssentoInexistenteExceptionQuandoAssentoNaoForEncontrado(){
+        String assentoInexistente = "Z99";
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
+
+        Assertions.assertThrows(AssentoInexistenteException.class, ()->{
+           reservaIngressoService.reservarIngresso(sessaoId, assentoInexistente);
+        });
+
+        verify(sessaoRepository, never()).save(any());
     }
 }
