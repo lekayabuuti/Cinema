@@ -11,6 +11,9 @@ import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
 import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -167,5 +170,17 @@ class ReservaIngressoServiceTest {
 
         verify(sessaoRepository, never()).findById(any());
         verify(sessaoMapper, never()).toDomain(any());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "\t", "\n"})
+    @DisplayName("Deve lançar IllegalArgumentException ao tentar reservar com código de assento inválido")
+    void deveLancarIllegalArgumentExceptionQuandoCodigoAssentoForInvalido(String assentoInvalido){
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            reservaIngressoService.reservarIngresso(sessaoId, assentoInvalido);
+        });
+        verifyNoInteractions(sessaoRepository, sessaoMapper);
     }
 }
