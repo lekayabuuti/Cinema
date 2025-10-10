@@ -1,6 +1,7 @@
 package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.exception.SessaoInativaException;
+import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.model.IntervaloBusca;
 import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
 import br.ifsp.demo.domain.repository.SessaoRepository;
@@ -32,10 +33,11 @@ public class SessaoService {
     }
 
     public Sessao buscarSessaoPorId(Long sessaoID) {
-        Sessao sessao = sessaoRepository.findBySessaoId(sessaoID).get();
+        Sessao sessao = sessaoRepository.findBySessaoId(sessaoID)
+                .orElseThrow(() -> new SessaoInexistenteException("Sessão não encontrada."));
 
         if (sessao.isEncerrada()){
-            throw new SessaoInativaException("Sessao Encerrada para reservas!");
+            throw new SessaoInativaException("Sessao Encerrada para consultas!");
         }
         return sessao;
     }
