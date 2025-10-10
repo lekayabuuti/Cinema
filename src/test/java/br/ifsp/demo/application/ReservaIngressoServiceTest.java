@@ -1,9 +1,9 @@
-package br.ifsp.demo.service;
+package br.ifsp.demo.application;
 
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.exception.SessaoLotadaException;
-import br.ifsp.demo.domain.service.ReservaIngressoService;
+import br.ifsp.demo.application.service.ReservaIngressoService;
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;

@@ -1,4 +1,4 @@
-package br.ifsp.demo.domain.service;
+package br.ifsp.demo.application.service;
 
 import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.model.AssentoSessao;
