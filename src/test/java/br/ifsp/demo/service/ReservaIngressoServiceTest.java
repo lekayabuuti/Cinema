@@ -154,4 +154,18 @@ class ReservaIngressoServiceTest {
         verify(sessaoMapper, never()).toDomain(any());
         verify(sessaoRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("Deve lançar IllegalArgumentException quando tentar reservar um ou mais ingressos em uma sessão cujo ID é vazio")
+    void deveLancarIllegalArgumentExceptionQuandoTentarReservarIngressoEmUmaSessaoDeIdVazio(){
+        Long idNulo = null;
+        String qualquerAssento = "A1";
+
+        Assertions.assertThrows(SessaoInexistenteException.class, ()->{
+            reservaIngressoService.reservarIngresso(idNulo, qualquerAssento);
+        });
+
+        verify(sessaoRepository, never()).findById(any());
+        verify(sessaoMapper, never()).toDomain(any());
+    }
 }
