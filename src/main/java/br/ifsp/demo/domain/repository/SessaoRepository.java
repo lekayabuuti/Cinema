@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface SessaoRepository {
 
     List<Sessao> findByDataBetween(LocalDate dataInicial, LocalDate dataFinal);
-    Optional<Sessao> findBySessaoId(Long sessaoID);
+    Optional<Sessao> findById(Long sessaoID);
 }
 
 
