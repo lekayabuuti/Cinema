@@ -194,4 +194,7 @@ class ReservaIngressoServiceTest {
 
         verify(sessaoRepository, never()).save(any());
     }
+
+
+
 }
