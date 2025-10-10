@@ -48,7 +48,7 @@ public class AssentoSessaoServiceTest {
     @Tag("UnitTest")
     @Tag("Functional")
     @DisplayName("Deve retornar todos os assentos da sessão, disponíveis ou não")
-    void deveRetornarTodosOsAssentosDaSessao() {
+    void retornarTodosOsAssentosDaSessao() {
         Long sessaoId = 1L;
         AssentoSessao disponivel = AssentoSessao.reconstituir(assentoMock, sessaoMock, Status.DISPONIVEL);
         AssentoSessao reservado = AssentoSessao.reconstituir(assentoMock, sessaoMock, Status.RESERVADO);
@@ -107,6 +107,20 @@ public class AssentoSessaoServiceTest {
                 .thenThrow(new SessaoInexistenteException("Sessão não encontrada."));
 
         assertThrows(SessaoInexistenteException.class, () -> assentoSessaoService.buscarPorSessao(sessaoID));
+    }
+
+    //51
+    @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
+    @DisplayName("Retorna lista vazia ao procurar assentos de sessao sem assento Disponiveis")
+    void retornaListaVaziaAoProcurarAssentosDisponiveis() {
+        List<AssentoSessao> listaVazia = List.of();
+        Long sessaoID = 1L;
+        when(assentoSessaoService.buscarAssentosPorStatus(Status.DISPONIVEL)).thenReturn(listaVazia);
+
+        List<AssentoSessao> resultado = assentoSessaoService.buscarAssentosPorStatus(Status.DISPONIVEL);
+        assertThat(resultado).isEmpty();
     }
 
 }
