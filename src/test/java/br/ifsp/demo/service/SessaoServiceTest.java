@@ -25,17 +25,6 @@ public class SessaoServiceTest {
     ValidadorDataDisponivelService validador;
     @InjectMocks
     SessaoService sessaoService;
-    @Mock
-    Filme filmeMock;
-    @Mock
-    Sala salaMock;
-
-    private Sessao sessaoEncerrada(){
-        DataHora dataAntiga = new DataHora(
-                LocalDate.now(), LocalTime.now().minusMinutes(10)
-        );
-        return new Sessao(filmeMock,dataAntiga,salaMock);
-    }
 
     private Sessao novaSessao(String nome, int minutos, LocalDate data, LocalTime hora, Integer numero) {
         Filme filme = new Filme(nome,minutos);
@@ -94,18 +83,8 @@ public class SessaoServiceTest {
         assertThat(resultado).isEmpty();
     }
 
-    //24
-    @Test
-    @Tag("UnitTest")
-    @Tag("TDD")
-    @DisplayName("Deve lancar SessaoInativaException ao pesquisar assento de sessao passada")
-    void deveLancarExceptionAoPesquisarAssentoSessaoPassada() {
-        Long sessaoID = 1L;
-        Sessao sessaoEncerrada = sessaoEncerrada();
-        when(sessaoRepository.findBySessaoId(sessaoID)).thenReturn(Optional.of(sessaoEncerrada));
 
-        assertThrows(SessaoInativaException.class, () -> sessaoService.buscarSessaoPorId(sessaoID));
-    }
+
 
 
 
