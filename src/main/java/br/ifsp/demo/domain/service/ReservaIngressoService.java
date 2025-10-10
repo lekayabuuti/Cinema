@@ -1,5 +1,6 @@
 package br.ifsp.demo.domain.service;
 
+import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.domain.model.Ingresso;
 import br.ifsp.demo.domain.model.Sessao;
@@ -23,7 +24,7 @@ public class ReservaIngressoService {
     public Ingresso reservarIngresso(Long sessaoId, String codigoAssento){
         //1. carregar a entidade do repositório
         SessaoEntity sessaoEntity = sessaoRepository.findById(sessaoId)
-                .orElseThrow(() -> new RuntimeException("Sessão não encontrada com o ID: " + sessaoId));
+                .orElseThrow(() -> new SessaoInexistenteException("Sessão não encontrada com o ID: " + sessaoId));
 
         //2. mapeia para o objeto do dominio
         Sessao sessaoDomain = sessaoMapper.toDomain(sessaoEntity);

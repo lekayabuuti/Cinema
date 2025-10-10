@@ -1,6 +1,8 @@
 package br.ifsp.demo.service;
 
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
+import br.ifsp.demo.domain.exception.SessaoInexistenteException;
+import br.ifsp.demo.domain.exception.SessaoLotadaException;
 import br.ifsp.demo.domain.service.ReservaIngressoService;
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.model.*;
@@ -54,7 +56,6 @@ class ReservaIngressoServiceTest {
         sessaoEntityFalsa.setId(sessaoId);
 
         //configuração dos mocks
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
     }
 
     @Test
@@ -62,6 +63,7 @@ class ReservaIngressoServiceTest {
     public void deveReservarComSucessoQuandoSessaoEAssentoEstaoDisponiveis(){
         //ARRANGE
         String assentoParaReservar = "A1";
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(sessaoMapper.toEntity(any(Sessao.class))).thenReturn(new SessaoEntity());
 
@@ -82,6 +84,7 @@ class ReservaIngressoServiceTest {
     public void deveLancarAssentoIndisponivelExceptionQuandoAssentoJaEstiverReservado(){
         String assentoJaReservado = "A1";
         sessaoDomain.reservarAssento(assentoJaReservado);
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
 
         Assertions.assertThrows(AssentoIndisponivelException.class, () ->{
@@ -106,7 +109,7 @@ class ReservaIngressoServiceTest {
                 dataHoraPassada,
                 sala
         );
-
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoEncerrada);
 
         String assentoParaReservar = "A1";
@@ -117,5 +120,38 @@ class ReservaIngressoServiceTest {
 
         verify(sessaoRepository, never()).save(any());
 
+    }
+
+    @Test
+    @DisplayName("Deve lançar SessaoLotadaException quando tentar reservar um ou mais ingressos em uma sessão encerrada")
+    void deveLancarSessaoLotadaExceptionQuandoTentarReservarIngressoEmUmaSessaoLotada(){
+        sessaoDomain.reservarAssento("A1");
+        sessaoDomain.reservarAssento("A2");
+
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
+
+        Assertions.assertThrows(SessaoLotadaException.class, () -> {
+            reservaIngressoService.reservarIngresso(sessaoId, "A1");
+        });
+
+        verify(sessaoRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Deve lançar SessaoInexistenteException quando tentar reservar um ou mais ingressos em uma sessão inexistente")
+    void deveLancarSessaoInexistenteExceptionQuandoTentarReservarIngressoEmUmaSessaoInexistente(){
+        Long idInexistente = 999L;
+        String qualquerAssento = "A1";
+
+        //simula um "não encontrado" no banco de dados
+        when(sessaoRepository.findById(idInexistente)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(SessaoInexistenteException.class, ()->{
+            reservaIngressoService.reservarIngresso(idInexistente, qualquerAssento);
+        });
+
+        verify(sessaoMapper, never()).toDomain(any());
+        verify(sessaoRepository, never()).save(any());
     }
 }
