@@ -5,6 +5,7 @@ import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,8 +32,11 @@ public class Sessao {
     }
 
     public boolean isEncerrada(){
-        LocalDateTime dataHoraDaSessao = LocalDateTime.of(this.dataHora.data(), this.dataHora.hora());
-        return dataHoraDaSessao.isBefore(LocalDateTime.now());
+        final int TOLERANCIA_MAXIMA = 5;
+        LocalDateTime limiteSessaoDisponivel = LocalDateTime.of(
+                this.dataHora.data(),
+                this.dataHora.hora().plusMinutes(TOLERANCIA_MAXIMA));
+        return limiteSessaoDisponivel.isBefore(LocalDateTime.now());
     }
 
     /**

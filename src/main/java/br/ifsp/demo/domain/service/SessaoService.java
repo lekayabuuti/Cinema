@@ -1,5 +1,6 @@
 package br.ifsp.demo.domain.service;
 
+import br.ifsp.demo.domain.exception.SessaoInativaException;
 import br.ifsp.demo.domain.model.IntervaloBusca;
 import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
 import br.ifsp.demo.domain.repository.SessaoRepository;
@@ -28,6 +29,15 @@ public class SessaoService {
         validator.validar (periodo.dataFinal());
 
         return sessaoRepository.findByDataBetween(dataInicial, dataFinal);
+    }
+
+    public Sessao buscarSessaoPorId(Long sessaoID) {
+        Sessao sessao = sessaoRepository.findBySessaoId(sessaoID).get();
+
+        if (sessao.isEncerrada()){
+            throw new SessaoInativaException("Sessao Encerrada para reservas!");
+        }
+        return sessao;
     }
 
 

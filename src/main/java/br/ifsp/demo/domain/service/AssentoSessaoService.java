@@ -2,9 +2,7 @@ package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.AssentoSessao;
-import br.ifsp.demo.infrastructure.persistence.entity.AssentoSessaoEntity;
-import br.ifsp.demo.infrastructure.persistence.mapper.AssentoSessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.AssentoSessaoRepository;
+import br.ifsp.demo.domain.repository.AssentoSessaoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,27 +11,17 @@ import java.util.List;
 public class AssentoSessaoService {
 
     private final AssentoSessaoRepository repository;
-    private final AssentoSessaoMapper mapper;
 
-    public AssentoSessaoService(AssentoSessaoRepository repository, AssentoSessaoMapper mapper) {
+    public AssentoSessaoService(AssentoSessaoRepository repository) {
         this.repository = repository;
-        this.mapper = mapper;
+
     }
 
     public List<AssentoSessao> buscarPorSessao(Long sessaoId) {
-        List<AssentoSessaoEntity> entidades = repository.findBySessaoId(sessaoId);
-
-        return entidades.stream()
-                .map(mapper::toDomain)
-                .toList();
+        return repository.findBySessaoId(sessaoId);
     }
 
-    public List<AssentoSessao> buscarAssentosDisponiveis(Long sessaoId, Status status) {
-        List<AssentoSessaoEntity> entidades = repository.findBySessaoId(sessaoId);
-
-        return entidades.stream()
-                .filter(e -> e.getStatus().equals(status))
-                .map(mapper::toDomain)
-                .toList();
+    public List<AssentoSessao> buscarAssentosPorStatus( Status status) {
+        return repository.findByAssentoStatus(status);
     }
 }
