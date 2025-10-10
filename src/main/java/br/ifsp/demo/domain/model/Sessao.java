@@ -1,6 +1,7 @@
 package br.ifsp.demo.domain.model;
 
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
+import br.ifsp.demo.domain.exception.AssentoInexistenteException;
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
 import br.ifsp.demo.domain.exception.SessaoLotadaException;
 import lombok.Getter;
@@ -63,7 +64,7 @@ public class Sessao {
         AssentoSessao assentoParaReservar = this.assentosDaSessao.stream()
                 .filter(assentoSessao -> assentoSessao.getAssento().getCodigo().equals(codigoAssento))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Assento não encontrado nessa sessão"));
+                .orElseThrow(() -> new AssentoInexistenteException("O assento " + codigoAssento + " não foi encontrado nesta sessão."));
 
         // 2- Aplica a regra de negocio (verificar se esta disponivel SOMENTE... por enquanto)
         if (!assentoParaReservar.estaDisponivel()){
