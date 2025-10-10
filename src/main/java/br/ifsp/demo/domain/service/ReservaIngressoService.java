@@ -22,6 +22,9 @@ public class ReservaIngressoService {
 
     //@Transactional
     public Ingresso reservarIngresso(Long sessaoId, String codigoAssento){
+        if (sessaoId==null)
+            throw new SessaoInexistenteException("ID de Sessão não pode ser nulo.");
+
         //1. carregar a entidade do repositório
         SessaoEntity sessaoEntity = sessaoRepository.findById(sessaoId)
                 .orElseThrow(() -> new SessaoInexistenteException("Sessão não encontrada com o ID: " + sessaoId));
