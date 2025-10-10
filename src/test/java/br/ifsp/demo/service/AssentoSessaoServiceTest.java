@@ -1,21 +1,25 @@
 package br.ifsp.demo.service;
 
-import br.ifsp.demo.domain.model.Assento;
-import br.ifsp.demo.domain.model.Sessao;
+import br.ifsp.demo.domain.exception.SessaoInativaException;
+import br.ifsp.demo.domain.exception.SessaoInexistenteException;
+import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.domain.repository.AssentoSessaoRepository;
+import br.ifsp.demo.domain.repository.SessaoRepository;
 import br.ifsp.demo.domain.service.AssentoSessaoService;
 import br.ifsp.demo.domain.enumerations.Status;
-import br.ifsp.demo.domain.model.AssentoSessao;
 
+import br.ifsp.demo.domain.service.SessaoService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.*;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
@@ -23,14 +27,21 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class AssentoSessaoServiceTest {
 
-    @Mock
-    AssentoSessaoRepository repository;
-    @InjectMocks
-    AssentoSessaoService service;
-    @Mock
-    Assento assentoMock;
-    @Mock
-    Sessao sessaoMock;
+    @Mock AssentoSessaoRepository assentoSessaoRepository;
+    @Mock SessaoRepository sessaoRepository;
+    @Mock SessaoService sessaoService;
+    @Mock Assento assentoMock;
+    @Mock Sessao sessaoMock;
+    @Mock Filme filmeMock;
+    @Mock Sala salaMock;
+    @InjectMocks AssentoSessaoService assentoSessaoService;
+
+    private Sessao sessaoEncerrada(){
+        DataHora dataAntiga = new DataHora(
+                LocalDate.now(), LocalTime.now().minusMinutes(10)
+        );
+        return new Sessao(filmeMock,dataAntiga,salaMock);
+    }
 
 
     //19
@@ -45,9 +56,9 @@ public class AssentoSessaoServiceTest {
         List<AssentoSessao> modelosDominios = List.of(disponivel, reservado);
 
 
-        when(repository.findBySessaoId(sessaoId)).thenReturn(modelosDominios);
+        when(assentoSessaoRepository.findBySessaoId(sessaoId)).thenReturn(modelosDominios);
 
-        List<AssentoSessao> resultado = service.buscarPorSessao(sessaoId);
+        List<AssentoSessao> resultado = assentoSessaoService.buscarPorSessao(sessaoId);
 
         assertThat(resultado).hasSize(2);
         assertThat(resultado).extracting(AssentoSessao::getStatus)
@@ -64,13 +75,39 @@ public class AssentoSessaoServiceTest {
         AssentoSessao disponivel = AssentoSessao.reconstituir(assentoMock, sessaoMock, Status.DISPONIVEL);
         List<AssentoSessao> modelosDominios = List.of(disponivel);
 
-        when(repository.findByAssentoStatus(Status.DISPONIVEL)).thenReturn(modelosDominios);
+        when(assentoSessaoRepository.findByAssentoStatus(Status.DISPONIVEL)).thenReturn(modelosDominios);
 
-        List<AssentoSessao> resultado = service.buscarAssentosPorStatus(Status.DISPONIVEL);
+        List<AssentoSessao> resultado = assentoSessaoService.buscarAssentosPorStatus(Status.DISPONIVEL);
 
         assertThat(resultado).hasSize(1);
         assertThat(resultado).extracting(AssentoSessao::getStatus)
                 .containsOnly(Status.DISPONIVEL);
+    }
+
+    //24
+    @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
+    @DisplayName("Deve lancar SessaoInativaException ao pesquisar assento de sessao passada")
+    void deveLancarExceptionAoPesquisarAssentoSessaoPassada() {
+        Long sessaoID = 1L;
+        when(sessaoService.buscarSessaoPorId(sessaoID))
+                .thenThrow(new SessaoInativaException("Sessao Encerrada para consultas!"));
+
+        assertThrows(SessaoInativaException.class, () -> assentoSessaoService.buscarPorSessao(sessaoID));
+    }
+
+    //17
+    @Test
+    @Tag("UnitTest")
+    @Tag("TDD")
+    @DisplayName("Deve lancar SessaoInexistenteException ao pesquisar assento de sessao inexistente")
+    void deveLancarExceptionAoPesquisarSessaoInexistente() {
+        Long sessaoID = 1L;
+        when(sessaoService.buscarSessaoPorId(sessaoID))
+                .thenThrow(new SessaoInexistenteException("Sessão não encontrada."));
+
+        assertThrows(SessaoInexistenteException.class, () -> assentoSessaoService.buscarPorSessao(sessaoID));
     }
 
 }
