@@ -2,6 +2,7 @@ package br.ifsp.demo.domain.model;
 
 import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
+import br.ifsp.demo.domain.exception.SessaoLotadaException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,6 +40,11 @@ public class Sessao {
         return limiteSessaoDisponivel.isBefore(LocalDateTime.now());
     }
 
+    private boolean isLotada(){
+        return this.assentosDaSessao.stream()
+                .noneMatch(AssentoSessao::estaDisponivel);
+    }
+
     /**
      * Encontra um assento pelo código, aplica a regra de negócio de reserva
      * e altera o estado do assento.
@@ -49,6 +55,9 @@ public class Sessao {
 
         if (isEncerrada())
             throw new SessaoIndisponivelException("Sessão não está mais disponível (já ocorreu)");
+
+        if (isLotada())
+            throw new SessaoLotadaException("Não há mais assentos disponíveis para esta sessão.");
 
         //1 - Encontra o assento desejado na lista de assentos DESSA sessao
         AssentoSessao assentoParaReservar = this.assentosDaSessao.stream()
