@@ -87,7 +87,7 @@ public class Sessao {
 
     public void cancelarReserva(String codigoAssento, LocalDateTime agora) {
         if (isForaDoPrazoDeCancelamento(agora))
-            throw new PrazoCancelamentoExpiradoException("O prazo do cancelamento de 5 minutos antes da exceção já expirou");
+            throw new TempoDeCancelamentoExcedidoException("O prazo do cancelamento de 5 minutos antes da exceção já expirou");
 
         AssentoSessao assentoParaCancelar = this.assentosDaSessao.stream()
                 .filter(assento -> assento.getAssento().getCodigo().equals(codigoAssento))
