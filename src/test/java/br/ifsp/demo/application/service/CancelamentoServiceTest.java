@@ -114,7 +114,6 @@ class CancelamentoServiceTest {
     @Test
     @DisplayName("Deve lançar ReservaInexistenteException ao tentar cancelar um assento não reservado")
     void deveLancarReservaInexistenteExceptionQuandoAssentoNaoEstaReservado() {
-        // ARRANGE
         // cria um cenario onde a sessão existe, mas o assento "A2" esta disponível
         Sala sala = new Sala(1);
         sala.getAssentos().add(new Assento("A1"));
@@ -136,7 +135,6 @@ class CancelamentoServiceTest {
         when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(new SessaoEntity()));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoComVagas);
 
-        // ACT
         assertThrows(ReservaInexistenteException.class, () -> {
             cancelamentoService.cancelar(sessaoId, assentoNaoReservado);
         });

@@ -95,7 +95,7 @@ public class Sessao {
                 .orElseThrow(() -> new AssentoInexistenteException("O assento '" + codigoAssento + "' não foi encontrado nesta sessão."));
 
         if (assentoParaCancelar.estaDisponivel())
-            throw new AssentoNaoReservadoException("Não é possível cancelar a reserva de um assento que já está disponível");
+            throw new ReservaInexistenteException("Não existe uma reserva ativa para o assento " + codigoAssento);
 
         assentoParaCancelar.liberar();
     }
