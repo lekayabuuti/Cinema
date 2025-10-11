@@ -21,6 +21,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -80,4 +81,31 @@ class CancelamentoServiceTest {
         assertThat(assentoCancelado.estaDisponivel()).isTrue();
     }
 
+    @Test
+    @DisplayName("Deve lançar TempoDeCancelamentoExcedidoException quando o prazo de cancelamento expirar")
+    void deveLancarTempoDeCancelamentoExcedidoExceptionQuandoPrazoDeCancelamentoExpirar(){
+        Sala sala = new Sala(1);
+        sala.getAssentos().add(new Assento("A1"));
+
+        LocalDateTime agora = LocalDateTime.now();
+        DataHora dataHoraProxima = new DataHora(agora.toLocalDate(), agora.toLocalTime().plusMinutes(4));
+
+        Sessao sessaoQuaseComecando = new Sessao(
+                new Filme("Filme legal", 90),
+                dataHoraProxima,
+                sala
+        );
+        sessaoQuaseComecando.reservarAssento("A1");
+
+        String assentoParaCancelar = "A1";
+
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(new SessaoEntity()));
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoQuaseComecando);
+
+        assertThrows(TempoDeCancelamentoExcedidoException.class, () -> {
+            cancelamentoService.cancelar(sessaoId, assentoParaCancelar);
+        });
+
+        verify(sessaoRepository, never()).save(any());
+    }
 }
