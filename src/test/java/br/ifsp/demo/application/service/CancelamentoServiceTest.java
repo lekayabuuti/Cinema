@@ -108,4 +108,40 @@ class CancelamentoServiceTest {
 
         verify(sessaoRepository, never()).save(any());
     }
+
+
+
+    @Test
+    @DisplayName("Deve lançar ReservaInexistenteException ao tentar cancelar um assento não reservado")
+    void deveLancarReservaInexistenteExceptionQuandoAssentoNaoEstaReservado() {
+        // ARRANGE
+        // cria um cenario onde a sessão existe, mas o assento "A2" esta disponível
+        Sala sala = new Sala(1);
+        sala.getAssentos().add(new Assento("A1"));
+        sala.getAssentos().add(new Assento("A2"));
+
+        LocalDateTime agora = LocalDateTime.now();
+        DataHora dataHoraFutura = new DataHora(agora.toLocalDate(), agora.toLocalTime().plusMinutes(30));
+
+        Sessao sessaoComVagas = new Sessao(
+                new Filme("Filme com Vagas", 120),
+                dataHoraFutura,
+                sala
+        );
+        // reserva somente A1, deixando A2 livre
+        sessaoComVagas.reservarAssento("A1");
+
+        String assentoNaoReservado = "A2";
+
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(new SessaoEntity()));
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoComVagas);
+
+        // ACT
+        assertThrows(ReservaInexistenteException.class, () -> {
+            cancelamentoService.cancelar(sessaoId, assentoNaoReservado);
+        });
+
+        // garantir que a operação foi abortada antes de salvar
+        verify(sessaoRepository, never()).save(any());
+    }
 }
