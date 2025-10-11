@@ -3,10 +3,8 @@ package br.ifsp.demo.domain.service;
 import br.ifsp.demo.domain.exception.SessaoInativaException;
 import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.model.IntervaloBusca;
-import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
 import br.ifsp.demo.domain.repository.SessaoRepository;
 import br.ifsp.demo.domain.model.Sessao;
-import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,7 +31,7 @@ public class SessaoService {
     }
 
     public Sessao buscarSessaoPorId(Long sessaoID) {
-        Sessao sessao = sessaoRepository.findBySessaoId(sessaoID)
+        Sessao sessao = sessaoRepository.findById(sessaoID)
                 .orElseThrow(() -> new SessaoInexistenteException("Sessão não encontrada."));
 
         if (sessao.isEncerrada()){
