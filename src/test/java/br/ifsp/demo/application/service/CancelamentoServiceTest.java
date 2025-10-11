@@ -1,17 +1,32 @@
 package br.ifsp.demo.application.service;
 
+import br.ifsp.demo.domain.exception.*;
+import br.ifsp.demo.application.service.ReservaIngressoService;
 import br.ifsp.demo.domain.model.*;
-import br.ifsp.demo.domain.repository.SessaoRepository;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
-import org.junit.jupiter.api.BeforeEach;
+import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@Tag("UnitTest")
+@Tag("TDD")
 class CancelamentoServiceTest {
     @Mock
     private SessaoRepository sessaoRepository;
@@ -23,7 +38,8 @@ class CancelamentoServiceTest {
     private CancelamentoService cancelamentoService;
 
     private Sessao sessaoDomain;
-    private Long sessaoId;
+    private SessaoEntity sessaoEntityFalsa;
+    private Long sessaoId = 1L;
 
     @BeforeEach
     void setUp(){
@@ -43,9 +59,25 @@ class CancelamentoServiceTest {
         sessaoDomain.reservarAssento("A1");
         sessaoDomain.reservarAssento("A2");
 
-        SessaoEntity sessaoEntityFalsa = new SessaoEntity();
+        sessaoEntityFalsa = new SessaoEntity();
         sessaoEntityFalsa.setId(sessaoId);
+    }
 
+    @Test
+    @DisplayName("Deve cancelar uma reserva com sucesso se prazo de cancelamento não expirou")
+    void deveCancelarUmaReservaComSucessoSePrazoDeCancelamentoNaoExpirou(){
+        String assentoParaCancelar = "A1";
+
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
+        when(sessaoMapper.toEntity(sessaoDomain)).thenReturn(new SessaoEntity());
+
+        cancelamentoService.cancelar(sessaoId, assentoParaCancelar);
+
+        verify(sessaoRepository).save(any(SessaoEntity.class));
+
+        AssentoSessao assentoCancelado = sessaoDomain.getAssentosDaSessao().getFirst();
+        assertThat(assentoCancelado.estaDisponivel()).isTrue();
     }
 
 }
