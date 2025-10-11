@@ -1,9 +1,6 @@
 package br.ifsp.demo.domain.model;
 
-import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
-import br.ifsp.demo.domain.exception.AssentoInexistenteException;
-import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
-import br.ifsp.demo.domain.exception.SessaoLotadaException;
+import br.ifsp.demo.domain.exception.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -76,5 +73,27 @@ public class Sessao {
 
         return assentoParaReservar;
 
+    }
+
+    private boolean isForaDoPrazoDeCancelamento(LocalDateTime agora) {
+        final int MINUTOS_LIMITE_CANCELAMENTO = 5;
+        LocalDateTime dataHoraSessao = LocalDateTime.of(this.dataHora.data(), this.dataHora.hora());
+
+        //limite para o cancelamento = 5 minutos ANTES da sessão
+        LocalDateTime limiteCancelamento = dataHoraSessao.minusMinutes(MINUTOS_LIMITE_CANCELAMENTO);
+
+        return agora.isAfter(limiteCancelamento);
+    }
+
+    public void cancelarReserva(String codigoAssento, LocalDateTime agora) {
+        AssentoSessao assentoParaCancelar = this.assentosDaSessao.stream()
+                .filter(assento -> assento.getAssento().getCodigo().equals(codigoAssento))
+                .findFirst()
+                .orElseThrow(() -> new AssentoInexistenteException("O assento '" + codigoAssento + "' não foi encontrado nesta sessão."));
+
+        if (assentoParaCancelar.estaDisponivel())
+            throw new AssentoNaoReservadoException("Não é possível cancelar a reserva de um assento que já está disponível");
+
+        assentoParaCancelar.liberar();
     }
 }
