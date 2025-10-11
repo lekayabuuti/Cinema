@@ -142,4 +142,18 @@ class CancelamentoServiceTest {
         // garantir que a operação foi abortada antes de salvar
         verify(sessaoRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("Deve lançar IllegalArgumentException quando o ID da sessão for nulo")
+    void deveLancarIllegalArgumentExceptionQuandoSessaoIdForNulo() {
+        Long idNulo = null;
+        String qualquerAssento = "A1";
+
+        // espera-se que o próprio serviço, ao receber um ID nulo, lance a exceção
+        assertThrows(IllegalArgumentException.class, () -> {
+            cancelamentoService.cancelar(idNulo, qualquerAssento);
+        });
+
+        verifyNoInteractions(sessaoRepository, sessaoMapper);
+    }
 }
