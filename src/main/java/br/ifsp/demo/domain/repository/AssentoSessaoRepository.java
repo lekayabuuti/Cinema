@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface AssentoSessaoRepository {
     List<AssentoSessao> findBySessaoId(Long sessaoId);
     List<AssentoSessao> findByAssentoStatus(Status status);
+    List<AssentoSessao> findBySessaoIdAndStatus(Long sessaoId, Status status);
 }
