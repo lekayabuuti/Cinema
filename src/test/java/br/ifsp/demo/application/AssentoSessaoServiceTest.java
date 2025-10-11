@@ -41,6 +41,17 @@ public class AssentoSessaoServiceTest {
         assertThrows(IllegalArgumentException.class, () -> assentoSessaoService.buscarPorSessao(null, false));
     }
 
+    // #17
+    @Test
+    @Tag("TDD")
+    @DisplayName("Deve lançar SessaoInexistenteException ao pesquisar assento de sessão inexistente (#17)")
+    void deveLancarExceptionAoPesquisarSessaoInexistente() {
+        Long sessaoID = 1L;
 
+        when(sessaoService.buscarSessaoPorId(sessaoID))
+                .thenThrow(new SessaoInexistenteException("Sessão não encontrada."));
+
+        assertThrows(SessaoInexistenteException.class, () -> assentoSessaoService.buscarPorSessao(sessaoID,true));
+    }
 
 }
