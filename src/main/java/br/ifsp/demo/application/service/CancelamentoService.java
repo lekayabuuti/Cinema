@@ -22,6 +22,9 @@ public class CancelamentoService {
 
     @Transactional
     public void cancelar(Long sessaoId, String assentoParaCancelar){
+        if (sessaoId == null)
+            throw new IllegalArgumentException("ID da sessão não pode ser nulo");
+
         //1 criar sessao entity (puxar a tabela do banco)
         SessaoEntity sessaoEntity = sessaoRepository.findById(sessaoId)
                 .orElseThrow(() -> new SessaoInexistenteException("Sessão não encontrada"));
