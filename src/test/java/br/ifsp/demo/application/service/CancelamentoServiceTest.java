@@ -143,17 +143,20 @@ class CancelamentoServiceTest {
         verify(sessaoRepository, never()).save(any());
     }
 
-    @Test
-    @DisplayName("Deve lançar IllegalArgumentException quando o ID da sessão for nulo")
-    void deveLancarIllegalArgumentExceptionQuandoSessaoIdForNulo() {
-        Long idNulo = null;
-        String qualquerAssento = "A1";
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"  ", "\t", "\n"})
+    @DisplayName("Deve lançar IllegalArgumentException ao cancelar com código de assento inválido")
+    void deveLancarIllegalArgumentExceptionQuandoCodigoAssentoForInvalido(String assentoInvalido) {
+        // ARRANGE - Não precisamos de mocks aqui também.
 
-        // espera-se que o próprio serviço, ao receber um ID nulo, lance a exceção
+        // ACT & ASSERT
         assertThrows(IllegalArgumentException.class, () -> {
-            cancelamentoService.cancelar(idNulo, qualquerAssento);
+            // Usamos um ID válido qualquer, o foco é no assento inválido.
+            cancelamentoService.cancelar(1L, assentoInvalido);
         });
 
+        // VERIFY
         verifyNoInteractions(sessaoRepository, sessaoMapper);
     }
 }
