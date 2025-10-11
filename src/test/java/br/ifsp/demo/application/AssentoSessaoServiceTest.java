@@ -36,6 +36,7 @@ public class AssentoSessaoServiceTest {
     // #52
     @Test
     @Tag("UnitTest")
+    @Tag("TDD")
     @DisplayName("Deve lançar IllegalArgumentException quando o ID da sessão for nulo (defesa #52)")
     void deveLancarExceptionQuandoIdSessaoForNulo() {
         assertThrows(IllegalArgumentException.class, () -> assentoSessaoService.buscarPorSessao(null, false));
@@ -43,6 +44,7 @@ public class AssentoSessaoServiceTest {
 
     // #17
     @Test
+    @Tag("UnitTest")
     @Tag("TDD")
     @DisplayName("Deve lançar SessaoInexistenteException ao pesquisar assento de sessão inexistente (#17)")
     void deveLancarExceptionAoPesquisarSessaoInexistente() {
