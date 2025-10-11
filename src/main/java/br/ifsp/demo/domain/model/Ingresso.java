@@ -1,19 +1,31 @@
 package br.ifsp.demo.domain.model;
 
+import br.ifsp.demo.domain.enumerations.Status;
+import lombok.Getter;
+
+@Getter
 public class Ingresso {
-    private Assento assento;
-    private Reserva reserva;
+    private final AssentoSessao assentoSessao; // Contém todas as informações (assento, sessão, status)
 
-    public Ingresso(Assento assento, Reserva reserva) {
-        this.assento = assento;
-        this.reserva = reserva;
+
+    // o ingresso SÓ é criado a partir de uma reserva de assento bem sucedida
+    public Ingresso(AssentoSessao assentoSessao) {
+        if (assentoSessao.getStatus() != Status.RESERVADO) {
+            throw new IllegalArgumentException("Não é possível gerar um ingresso para um assento que não está reservado.");
+        }
+        this.assentoSessao = assentoSessao;
     }
 
-    public Assento getAssento() {
-        return assento;
+    // metodos de conveniencia para "imprimir" o ingresso
+    public String getCodigoAssento() {
+        return assentoSessao.getAssento().getCodigo();
     }
 
-    public Reserva getReserva() {
-        return reserva;
+    public Filme getFilme() {
+        return assentoSessao.getSessao().getFilme();
+    }
+
+    public DataHora getHorario() {
+        return assentoSessao.getSessao().getDataHora();
     }
 }

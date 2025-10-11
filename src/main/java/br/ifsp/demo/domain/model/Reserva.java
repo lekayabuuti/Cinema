@@ -1,19 +1,19 @@
 package br.ifsp.demo.domain.model;
 
-import br.ifsp.demo.controller.TransactionController;
+import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+@Data
 public class Reserva {
-    private final String user;
-    private List<Ingresso> ingressos;
-    TransactionController transactionController;
 
-    public Reserva() {
-        this.user = "UID usuario";
-        this.ingressos = new ArrayList<>();
-    }
+    private Long id;
 
+    // Uma reserva possuirá uma Lista de ingressos
+    private List<Ingresso> ingressos = new ArrayList<>();
 
+    private Sessao sessao;
 }
