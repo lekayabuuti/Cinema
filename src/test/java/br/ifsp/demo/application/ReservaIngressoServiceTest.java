@@ -48,7 +48,10 @@ class ReservaIngressoServiceTest {
         sala.getAssentos().add(new Assento( "A2"));
 
         sessaoDomain = new Sessao(new Filme("Filme legal", 90),
-                new DataHora(LocalDate.of(2025, 10, 9).plusDays(1), LocalTime.of(20,0)),
+                // Usamos uma data bem no futuro (+100 dias) para garantir que os testes de 'caminho feliz'
+                // não se tornem frágeis e quebrem com o passar do tempo.
+                //É possível aumentar ainda mais essa data, caso atinja esse tempo e o código quebre.
+                new DataHora(LocalDate.of(2025, 10, 9).plusDays(100), LocalTime.of(20,0)),
                 sala
         );
 
