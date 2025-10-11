@@ -44,4 +44,7 @@ public class AssentoSessao {
         this.status = Status.RESERVADO;
     }
 
+    public void liberar(){
+        this.status = Status.DISPONIVEL;
+    }
 }
