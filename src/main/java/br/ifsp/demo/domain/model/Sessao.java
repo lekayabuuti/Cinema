@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -49,7 +50,7 @@ public class Sessao {
      * @param codigoAssento O código do assento a ser reservado (ex: "A1").
      * @return O objeto AssentoSessao que foi reservado.
      */
-    public AssentoSessao reservarAssento (String codigoAssento){
+    public AssentoSessao reservarAssento (String codigoAssento, UUID userId){
 
         if (isEncerrada())
             throw new SessaoIndisponivelException("Sessão não está mais disponível (já ocorreu)");
@@ -69,7 +70,7 @@ public class Sessao {
         }
 
         //3 manda o objeto se reservar (encapsulamento)
-        assentoParaReservar.reservar();
+        assentoParaReservar.reservar(userId);
 
         return assentoParaReservar;
 
@@ -85,7 +86,7 @@ public class Sessao {
         return agora.isAfter(limiteCancelamento);
     }
 
-    public void cancelarReserva(String codigoAssento, LocalDateTime agora) {
+    public void cancelarReserva(String codigoAssento, UUID usuarioId, LocalDateTime agora) {
         if (isForaDoPrazoDeCancelamento(agora))
             throw new TempoDeCancelamentoExcedidoException("O prazo do cancelamento de 5 minutos antes da exceção já expirou");
 
@@ -97,6 +98,9 @@ public class Sessao {
         if (assentoParaCancelar.estaDisponivel())
             throw new ReservaInexistenteException("Não existe uma reserva ativa para o assento " + codigoAssento);
 
+        if (!assentoParaCancelar.getUserId().equals(usuarioId)) {
+            throw new IllegalArgumentException("Usuário não autorizado a cancelar esta reserva.");
+        }
         assentoParaCancelar.liberar();
     }
 }

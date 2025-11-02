@@ -1,14 +1,16 @@
 package br.ifsp.demo.domain.model;
 
 import br.ifsp.demo.domain.enumerations.Status;
+import br.ifsp.demo.domain.exception.AssentoIndisponivelException;
 import lombok.Getter;
-import lombok.Setter;
+import java.util.UUID;
 
 @Getter
 public class AssentoSessao {
     private final Assento assento;
     private final Sessao sessao;
     private Status status;
+    private UUID userId;
 
     private AssentoSessao(Assento assento, Sessao sessao) {
         this.assento = assento;
@@ -39,12 +41,15 @@ public class AssentoSessao {
      * Altera o estado do assento para RESERVADO
      * Encapsula a logica de transicao de estado
      */
-    public void reservar() {
-        // abre espaco para adicionar regras. Exemplo: "if(status != DSIPONIVEL) throw...
+    public void reservar(UUID userId) {
+        if (this.status == Status.RESERVADO)
+            throw new AssentoIndisponivelException("Assento indisponível");
         this.status = Status.RESERVADO;
+        this.userId = userId;
     }
 
     public void liberar(){
         this.status = Status.DISPONIVEL;
+        this.userId = null;
     }
 }
