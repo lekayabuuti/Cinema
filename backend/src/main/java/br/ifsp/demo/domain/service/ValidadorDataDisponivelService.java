@@ -1,21 +1,21 @@
 package br.ifsp.demo.domain.service;
 
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
-import br.ifsp.demo.infrastructure.persistence.repository.DataIndisponivelRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaDataIndisponivelRepository;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
 public class ValidadorDataDisponivelService {
 
-    private final DataIndisponivelRepository dataIndisponivelRepository;
+    private final JpaDataIndisponivelRepository jpaDataIndisponivelRepository;
 
-    public ValidadorDataDisponivelService(DataIndisponivelRepository dataIndisponivelRepository) {
-        this.dataIndisponivelRepository = dataIndisponivelRepository;
+    public ValidadorDataDisponivelService(JpaDataIndisponivelRepository jpaDataIndisponivelRepository) {
+        this.jpaDataIndisponivelRepository = jpaDataIndisponivelRepository;
     }
 
     public void validar(LocalDate data) {
-        if(dataIndisponivelRepository.existsByData(data)) {
+        if(jpaDataIndisponivelRepository.existsByData(data)) {
             throw new SessaoIndisponivelException("Data " + data + " indisponível para sessões");
         }
     }

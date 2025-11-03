@@ -6,17 +6,17 @@ import br.ifsp.demo.domain.model.Ingresso;
 import br.ifsp.demo.domain.model.Sessao;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaSessaoRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReservaIngressoService {
 
-    private final SessaoRepository sessaoRepository;
+    private final JpaSessaoRepository jpaSessaoRepository;
     private final SessaoMapper sessaoMapper;
 
-    public ReservaIngressoService(SessaoRepository sessaoRepository, SessaoMapper sessaoMapper) {
-        this.sessaoRepository = sessaoRepository;
+    public ReservaIngressoService(JpaSessaoRepository jpaSessaoRepository, SessaoMapper sessaoMapper) {
+        this.jpaSessaoRepository = jpaSessaoRepository;
         this.sessaoMapper = sessaoMapper;
     }
 
@@ -29,7 +29,7 @@ public class ReservaIngressoService {
             throw new IllegalArgumentException("Código de assento não pode ser nulo ou vazio");
 
         //1. carregar a entidade do repositório
-        SessaoEntity sessaoEntity = sessaoRepository.findById(sessaoId)
+        SessaoEntity sessaoEntity = jpaSessaoRepository.findById(sessaoId)
                 .orElseThrow(() -> new SessaoInexistenteException("Sessão não encontrada com o ID: " + sessaoId));
 
         //2. mapeia para o objeto do dominio
@@ -40,7 +40,7 @@ public class ReservaIngressoService {
 
         //4. mapeia o dominio modificado de volta para a entidade e salva
         SessaoEntity entityParaSalvar = sessaoMapper.toEntity(sessaoDomain);
-        sessaoRepository.save(entityParaSalvar);
+        jpaSessaoRepository.save(entityParaSalvar);
 
         return new Ingresso(assentoReservado);
     }

@@ -4,7 +4,7 @@ import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.model.Sessao;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaSessaoRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 
 @Service
 public class CancelamentoService {
-    private final SessaoRepository sessaoRepository;
+    private final JpaSessaoRepository jpaSessaoRepository;
     private final SessaoMapper sessaoMapper;
 
-    public CancelamentoService(SessaoRepository sessaoRepository, SessaoMapper sessaoMapper) {
-        this.sessaoRepository = sessaoRepository;
+    public CancelamentoService(JpaSessaoRepository jpaSessaoRepository, SessaoMapper sessaoMapper) {
+        this.jpaSessaoRepository = jpaSessaoRepository;
         this.sessaoMapper = sessaoMapper;
     }
 
@@ -30,7 +30,7 @@ public class CancelamentoService {
 
 
         //criar sessao entity (puxar a tabela do banco)
-        SessaoEntity sessaoEntity = sessaoRepository.findById(sessaoId)
+        SessaoEntity sessaoEntity = jpaSessaoRepository.findById(sessaoId)
                 .orElseThrow(() -> new SessaoInexistenteException("Sessão não encontrada"));
 
         Sessao sessaoDomain = sessaoMapper.toDomain(sessaoEntity);
@@ -38,6 +38,6 @@ public class CancelamentoService {
         sessaoDomain.cancelarReserva(assentoParaCancelar, LocalDateTime.now());
 
         SessaoEntity entityParaSalvar = sessaoMapper.toEntity(sessaoDomain);
-        sessaoRepository.save(entityParaSalvar);
+        jpaSessaoRepository.save(entityParaSalvar);
     }
 }

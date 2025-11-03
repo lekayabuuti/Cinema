@@ -1,11 +1,10 @@
 package br.ifsp.demo.application.service;
 
 import br.ifsp.demo.domain.exception.*;
-import br.ifsp.demo.application.service.ReservaIngressoService;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaSessaoRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,9 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +27,7 @@ import static org.mockito.Mockito.*;
 @Tag("TDD")
 class CancelamentoServiceTest {
     @Mock
-    private SessaoRepository sessaoRepository;
+    private JpaSessaoRepository jpaSessaoRepository;
 
     @Mock
     private SessaoMapper sessaoMapper;
@@ -69,13 +66,13 @@ class CancelamentoServiceTest {
     void deveCancelarUmaReservaComSucessoSePrazoDeCancelamentoNaoExpirou(){
         String assentoParaCancelar = "A1";
 
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(sessaoMapper.toEntity(sessaoDomain)).thenReturn(new SessaoEntity());
 
         cancelamentoService.cancelar(sessaoId, assentoParaCancelar);
 
-        verify(sessaoRepository).save(any(SessaoEntity.class));
+        verify(jpaSessaoRepository).save(any(SessaoEntity.class));
 
         AssentoSessao assentoCancelado = sessaoDomain.getAssentosDaSessao().getFirst();
         assertThat(assentoCancelado.estaDisponivel()).isTrue();
@@ -99,14 +96,14 @@ class CancelamentoServiceTest {
 
         String assentoParaCancelar = "A1";
 
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(new SessaoEntity()));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(new SessaoEntity()));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoQuaseComecando);
 
         assertThrows(TempoDeCancelamentoExcedidoException.class, () -> {
             cancelamentoService.cancelar(sessaoId, assentoParaCancelar);
         });
 
-        verify(sessaoRepository, never()).save(any());
+        verify(jpaSessaoRepository, never()).save(any());
     }
 
 
@@ -132,7 +129,7 @@ class CancelamentoServiceTest {
 
         String assentoNaoReservado = "A2";
 
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(new SessaoEntity()));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(new SessaoEntity()));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoComVagas);
 
         assertThrows(ReservaInexistenteException.class, () -> {
@@ -140,7 +137,7 @@ class CancelamentoServiceTest {
         });
 
         // garantir que a operação foi abortada antes de salvar
-        verify(sessaoRepository, never()).save(any());
+        verify(jpaSessaoRepository, never()).save(any());
     }
 
     @ParameterizedTest
@@ -152,6 +149,6 @@ class CancelamentoServiceTest {
             cancelamentoService.cancelar(1L, assentoInvalido);
         });
 
-        verifyNoInteractions(sessaoRepository, sessaoMapper);
+        verifyNoInteractions(jpaSessaoRepository, sessaoMapper);
     }
 }
