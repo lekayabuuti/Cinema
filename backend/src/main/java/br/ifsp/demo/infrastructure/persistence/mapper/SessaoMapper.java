@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class SessaoMapper {
     public Sessao toDomain(SessaoEntity entity){
         Filme filme = new Filme(entity.getFilmeNome(), entity.getFilmeMinutos());
-        DataHora dataHora = new DataHora(entity.getHorarioData(),entity.getHorarioHora());
+        DataHora dataHora = new DataHora(entity.getData(),entity.getHorario());
         Sala sala = new Sala(entity.getNumeroSala());
         return new Sessao(filme, dataHora,sala);
     }
@@ -17,8 +17,8 @@ public class SessaoMapper {
         SessaoEntity entity = new SessaoEntity();
         entity.setFilmeNome(sessao.getFilme().nome());
         entity.setFilmeMinutos(sessao.getFilme().duracaoMinutos());
-        entity.setHorarioData(sessao.getDataHora().data());
-        entity.setHorarioHora(sessao.getDataHora().hora());
+        entity.setData(sessao.getDataHora().data());
+        entity.setHorario(sessao.getDataHora().hora());
         entity.setNumeroSala(sessao.getSala().getNumeroSala());
         return entity;
     }
