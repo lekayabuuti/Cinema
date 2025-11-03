@@ -1,17 +1,15 @@
 package br.ifsp.demo.application.service;
 
-import br.ifsp.demo.domain.model.Assento;
 import br.ifsp.demo.infrastructure.persistence.mapper.AssentoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.AssentoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaAssentoRepository;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class AssentoService {
 
-    private final AssentoRepository repository;
+    private final JpaAssentoRepository repository;
 
-    public AssentoService(AssentoRepository repository, AssentoMapper mapper) {
+    public AssentoService(JpaAssentoRepository repository, AssentoMapper mapper) {
         this.repository = repository;
     }
     /*

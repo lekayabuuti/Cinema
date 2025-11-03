@@ -5,7 +5,7 @@ import br.ifsp.demo.application.service.ReservaIngressoService;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.SessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaSessaoRepository;
 import br.ifsp.demo.infrastructure.security.auth.AuthenticationInfoService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 @Tag("TDD")
 class ReservaIngressoServiceTest {
     @Mock
-    private SessaoRepository sessaoRepository; // mock da camada de persistencia
+    private JpaSessaoRepository jpaSessaoRepository; // mock da camada de persistencia
 
     @Mock
     private SessaoMapper sessaoMapper; //mock do mapper
@@ -72,7 +72,7 @@ class ReservaIngressoServiceTest {
     public void deveReservarComSucessoQuandoSessaoEAssentoEstaoDisponiveis(){
         //ARRANGE
         String assentoParaReservar = "A1";
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(sessaoMapper.toEntity(any(Sessao.class))).thenReturn(new SessaoEntity());
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId); //mockar o authService
@@ -86,7 +86,7 @@ class ReservaIngressoServiceTest {
         assertThat(ingressoGerado).isNotNull();
         assertThat(ingressoGerado.getCodigoAssento()).isEqualTo(assentoParaReservar);
         assertThat(ingressoGerado.getFilme().nome()).isEqualTo("Filme legal");
-        verify(sessaoRepository).save(any(SessaoEntity.class));
+        verify(jpaSessaoRepository).save(any(SessaoEntity.class));
     }
 
     @Test
@@ -94,14 +94,14 @@ class ReservaIngressoServiceTest {
     public void deveLancarAssentoIndisponivelExceptionQuandoAssentoJaEstiverReservado(){
         String assentoJaReservado = "A1";
         sessaoDomain.reservarAssento(assentoJaReservado, dummyUserId);
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId);
 
         Assertions.assertThrows(AssentoIndisponivelException.class, () ->{
             reservaIngressoService.reservarIngresso(sessaoId, assentoJaReservado);
         });
-        verify(sessaoRepository, never()).save(any(SessaoEntity.class));
+        verify(jpaSessaoRepository, never()).save(any(SessaoEntity.class));
     }
 
     @Test
@@ -120,7 +120,7 @@ class ReservaIngressoServiceTest {
                 dataHoraPassada,
                 sala
         );
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoEncerrada);
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId);
 
@@ -130,7 +130,7 @@ class ReservaIngressoServiceTest {
             reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
         });
 
-        verify(sessaoRepository, never()).save(any());
+        verify(jpaSessaoRepository, never()).save(any());
 
     }
 
@@ -140,7 +140,7 @@ class ReservaIngressoServiceTest {
         sessaoDomain.reservarAssento("A1", dummyUserId);
         sessaoDomain.reservarAssento("A2", dummyUserId);
 
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId); //mockar o authService
 
@@ -148,7 +148,7 @@ class ReservaIngressoServiceTest {
             reservaIngressoService.reservarIngresso(sessaoId, "A1");
         });
 
-        verify(sessaoRepository, never()).save(any());
+        verify(jpaSessaoRepository, never()).save(any());
     }
 
     @Test
@@ -159,14 +159,14 @@ class ReservaIngressoServiceTest {
 
         //simula um "não encontrado" no banco de dados
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId);
-        when(sessaoRepository.findById(idInexistente)).thenReturn(Optional.empty());
+        when(jpaSessaoRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(SessaoInexistenteException.class, ()->{
             reservaIngressoService.reservarIngresso(idInexistente, qualquerAssento);
         });
 
         verify(sessaoMapper, never()).toDomain(any());
-        verify(sessaoRepository, never()).save(any());
+        verify(jpaSessaoRepository, never()).save(any());
     }
 
     @Test
@@ -179,7 +179,7 @@ class ReservaIngressoServiceTest {
             reservaIngressoService.reservarIngresso(idNulo, qualquerAssento);
         });
 
-        verify(sessaoRepository, never()).findById(any());
+        verify(jpaSessaoRepository, never()).findById(any());
         verify(sessaoMapper, never()).toDomain(any());
         verify(authService, never()).getAuthenticatedUserId(); //garante que auth não foi chamado
     }
@@ -193,14 +193,14 @@ class ReservaIngressoServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             reservaIngressoService.reservarIngresso(sessaoId, assentoInvalido);
         });
-        verifyNoInteractions(sessaoRepository, sessaoMapper, authService);
+        verifyNoInteractions(jpaSessaoRepository, sessaoMapper, authService);
     }
 
     @Test
     @DisplayName("Deve lançar AssentoInexistenteException quando o assento não for encontrado na sessão")
     void deveLancarAssentoInexistenteExceptionQuandoAssentoNaoForEncontrado(){
         String assentoInexistente = "Z99";
-        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
+        when(jpaSessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessaoEntityFalsa));
         when(sessaoMapper.toDomain(any(SessaoEntity.class))).thenReturn(sessaoDomain);
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId);
 
@@ -208,7 +208,7 @@ class ReservaIngressoServiceTest {
            reservaIngressoService.reservarIngresso(sessaoId, assentoInexistente);
         });
 
-        verify(sessaoRepository, never()).save(any());
+        verify(jpaSessaoRepository, never()).save(any());
     }
 
 

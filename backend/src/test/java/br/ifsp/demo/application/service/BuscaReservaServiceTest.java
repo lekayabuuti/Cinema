@@ -5,7 +5,7 @@ import br.ifsp.demo.domain.model.Assento;
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.infrastructure.persistence.entity.AssentoSessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.AssentoSessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.AssentoSessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaAssentoSessaoRepository;
 import br.ifsp.demo.infrastructure.security.auth.AuthenticationInfoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,13 +18,12 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BuscaReservaServiceTest {
     @Mock
-    private AssentoSessaoRepository repository;
+    private JpaAssentoSessaoRepository repository;
 
     @Mock
     private AssentoSessaoMapper mapper;

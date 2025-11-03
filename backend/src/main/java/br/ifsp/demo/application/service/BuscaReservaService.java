@@ -4,7 +4,7 @@ import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.infrastructure.persistence.entity.AssentoSessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.AssentoSessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.AssentoSessaoRepository;
+import br.ifsp.demo.infrastructure.persistence.repository.JpaAssentoSessaoRepository;
 import br.ifsp.demo.infrastructure.security.auth.AuthenticationInfoService;
 
 import java.util.List;
@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 public class BuscaReservaService {
 
-    private final AssentoSessaoRepository repository;
+    private final JpaAssentoSessaoRepository repository;
     private final AssentoSessaoMapper mapper;
     private final AuthenticationInfoService authService;
 
-    public BuscaReservaService(AssentoSessaoRepository repository, AssentoSessaoMapper mapper, AuthenticationInfoService authService) {
+    public BuscaReservaService(JpaAssentoSessaoRepository repository, AssentoSessaoMapper mapper, AuthenticationInfoService authService) {
         this.repository = repository;
         this.mapper = mapper;
         this.authService = authService;

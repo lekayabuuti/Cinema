@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.UUID;
 
-public interface AssentoSessaoRepository extends JpaRepository<AssentoSessaoEntity, Long> {
+public interface JpaAssentoSessaoRepository extends JpaRepository<AssentoSessaoEntity, Long> {
     List<AssentoSessaoEntity> findBySessaoId(Long sessaoId);
     List<AssentoSessaoEntity> findByUserIdAndStatus(UUID userId, Status status);
 }
