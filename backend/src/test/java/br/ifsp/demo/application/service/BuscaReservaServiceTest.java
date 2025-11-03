@@ -1,68 +1,150 @@
 package br.ifsp.demo.application.service;
 
-import br.ifsp.demo.domain.enumerations.Status;
-import br.ifsp.demo.domain.model.Assento;
-import br.ifsp.demo.domain.model.AssentoSessao;
-import br.ifsp.demo.infrastructure.persistence.entity.AssentoSessaoEntity;
-import br.ifsp.demo.infrastructure.persistence.mapper.AssentoSessaoMapper;
-import br.ifsp.demo.infrastructure.persistence.repository.JpaAssentoSessaoRepository;
+import br.ifsp.demo.domain.exception.SessaoInexistenteException;
+import br.ifsp.demo.domain.model.*;
+import br.ifsp.demo.domain.repository.ReservaRepository;
+import br.ifsp.demo.domain.repository.SessaoRepository;
 import br.ifsp.demo.infrastructure.security.auth.AuthenticationInfoService;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
-class BuscaReservaServiceTest {
-    @Mock
-    private JpaAssentoSessaoRepository repository;
+class ReservaServiceTest {
 
-    @Mock
-    private AssentoSessaoMapper mapper;
+    @Mock SessaoRepository sessaoRepository;
+    @Mock ReservaRepository reservaRepository;
+    @Mock AuthenticationInfoService authService;
 
-    @Mock
-    private AuthenticationInfoService authService;
+    @InjectMocks ReservaService reservaService;
 
-    @InjectMocks
-    private BuscaReservaService buscaReservaService;
+    // Auxiliares
+    private UUID autenticarUsuario() {
+        UUID usuarioId = UUID.randomUUID();
+        when(authService.getAuthenticatedUserId()).thenReturn(usuarioId);
+        return usuarioId;
+    }
 
+    private void mockSessaoExistente(Long sessaoId, Sessao sessao) {
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.of(sessao));
+    }
+
+    private void mockSessaoInexistente(Long sessaoId) {
+        when(sessaoRepository.findById(sessaoId)).thenReturn(Optional.empty());
+    }
+
+    //31
     @Test
-    @DisplayName("Deve retornar todas as reservas ativas do usuário")
-    void deveRetornarTodasAsReservasAtivasDoUsuario(){
-        //primeiro cria o usuário
-        UUID usuarioFalsoId = UUID.randomUUID();
+    @DisplayName("Deve retornar reservas do usuário em múltiplas sessões")
+    void deveRetornarReservasDoUsuarioEmMultiplasSessoes() {
+        UUID usuarioId = autenticarUsuario();
+        List<Long> sessoesId = List.of(1L, 2L);
+        Reserva r1 = mock(Reserva.class), r2 = mock(Reserva.class), r3 = mock(Reserva.class);
 
-        AssentoSessaoEntity entidade1 = new AssentoSessaoEntity();
-        AssentoSessaoEntity entidade2 = new AssentoSessaoEntity();
-        List<AssentoSessaoEntity> listaDoBanco = List.of(entidade1, entidade2);
+        // Mockando existência das sessões
+        when(sessaoRepository.findById(1L)).thenReturn(Optional.of(mock(Sessao.class)));
+        when(sessaoRepository.findById(2L)).thenReturn(Optional.of(mock(Sessao.class)));
 
-        AssentoSessao dominio1 = AssentoSessao.criarNovo(new Assento("A1"), null);
-        AssentoSessao dominio2 = AssentoSessao.criarNovo(new Assento("A2"), null);
+        when(reservaRepository.buscarPorSessaoEUsuario(1L, usuarioId)).thenReturn(List.of(r1));
+        when(reservaRepository.buscarPorSessaoEUsuario(2L, usuarioId)).thenReturn(List.of(r2, r3));
 
+        List<Reserva> resultado = reservaService.buscarReservasPorSessoesDoUsuario(sessoesId);
 
-        when(authService.getAuthenticatedUserId()).thenReturn(usuarioFalsoId);
+        assertEquals(3, resultado.size());
+        assertTrue(resultado.containsAll(List.of(r1, r2, r3)));
+    }
 
-        when(repository.findByUserIdAndStatus(usuarioFalsoId, Status.RESERVADO))
-                .thenReturn(listaDoBanco);
+    //49
+    @Test
+    @DisplayName("Deve reservar ingresso com sucesso")
+    void deveReservarIngressoComSucesso() {
+        Long sessaoId = 1L;
+        String codigo = "A1";
+        UUID usuarioId = autenticarUsuario();
 
-        when(mapper.toDomain(entidade1)).thenReturn(dominio1);
-        when(mapper.toDomain(entidade2)).thenReturn(dominio2);
+        Sessao sessao = mock(Sessao.class);
+        Assento assento = mock(Assento.class);
+        AssentoSessao assentoSessao = AssentoSessao.criarNovo(assento, sessao);
+        assentoSessao.reservar(usuarioId);
 
-        List<AssentoSessao> resultado = buscaReservaService.buscarMinhasReservas();
+        mockSessaoExistente(sessaoId, sessao);
+        when(sessao.reservarAssento(codigo, usuarioId)).thenReturn(assentoSessao);
+        when(reservaRepository.salvar(any())).thenAnswer(i -> i.getArgument(0));
 
-        assertThat(resultado)
-                .isNotNull() // ...não é nulo
-                .hasSize(2) // ...tem o tamanho de 2
-                .containsExactlyInAnyOrder(dominio1, dominio2);
+        Ingresso ingresso = reservaService.reservarIngresso(sessaoId, codigo);
 
+        assertEquals(assentoSessao, ingresso.getAssentoSessao());
+    }
 
+    //52//54
+    @Test
+    @DisplayName("Deve lançar exceção quando ID da sessão for nulo")
+    void deveLancarExcecaoQuandoIDSessaoForNulo() {
+        assertThrows(NullPointerException.class, () -> {
+            reservaService.buscarReservasPorSessaoEUsuario(null, UUID.randomUUID());
+        });
+    }
+
+    //56
+    @Test
+    @DisplayName("Deve lançar exceção quando ID da sessão for vazio")
+    void deveLancarExcecaoQuandoIDSessaoForVazio() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            reservaService.buscarReservasPorSessaoEUsuario(0L, UUID.randomUUID());
+        });
+    }
+
+    //32
+    @Test
+    @DisplayName("Deve retornar lista vazia quando usuário não possui reservas")
+    void deveRetornarListaVaziaQuandoUsuarioNaoPossuiReservas() {
+        UUID usuarioId = autenticarUsuario();
+        when(reservaRepository.buscarPorUsuario(usuarioId)).thenReturn(Collections.emptyList());
+
+        List<Reserva> reservas = reservaService.buscarTodasReservasDoUsuario();
+
+        assertTrue(reservas.isEmpty());
+    }
+
+    //58
+    @Test
+    @DisplayName("Deve lançar exceção quando sessão não existe")
+    void deveLancarExcecaoQuandoSessaoNaoExiste() {
+        Long sessaoId = 999L;
+        UUID usuarioId = UUID.randomUUID();
+        mockSessaoInexistente(sessaoId);
+
+        assertThrows(SessaoInexistenteException.class, () -> {
+            reservaService.buscarReservasPorSessaoEUsuario(sessaoId, usuarioId);
+        });
+    }
+
+    //60
+    @Test
+    @DisplayName("Deve lançar exceção ao buscar reservas em múltiplas sessões incluindo uma inexistente")
+    void deveLancarExcecaoAoBuscarReservasEmMultiplasSessoesComInexistente() {
+        UUID usuarioId = autenticarUsuario();
+        List<Long> sessoesId = List.of(1L, 2L);
+
+        mockSessaoExistente(1L, mock(Sessao.class));
+        mockSessaoInexistente(2L);
+        when(reservaRepository.buscarPorSessaoEUsuario(1L, usuarioId)).thenReturn(List.of(mock(Reserva.class)));
+
+        assertThrows(SessaoInexistenteException.class, () -> {
+            reservaService.buscarReservasPorSessoesDoUsuario(sessoesId);
+        });
     }
 }
