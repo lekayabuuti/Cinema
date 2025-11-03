@@ -1,9 +1,14 @@
 package br.ifsp.demo.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "salas")
 public class SalaEntity {
@@ -24,12 +29,4 @@ public class SalaEntity {
         this.numeroSala = numeroSala;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Integer getNumeroSala() { return numeroSala; }
-    public void setNumeroSala(Integer numeroSala) { this.numeroSala = numeroSala; }
-
-    public List<AssentoEntity> getAssentos() { return assentos; }
-    public void setAssentos(List<AssentoEntity> assentos) { this.assentos = assentos; }
 }
