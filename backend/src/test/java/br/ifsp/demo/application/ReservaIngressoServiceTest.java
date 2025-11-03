@@ -1,7 +1,7 @@
 package br.ifsp.demo.application;
 
 import br.ifsp.demo.domain.exception.*;
-import br.ifsp.demo.application.service.ReservaIngressoService;
+import br.ifsp.demo.application.service._ReservaServiceTEMPORARIO.ReservaService;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.infrastructure.persistence.entity.SessaoEntity;
 import br.ifsp.demo.infrastructure.persistence.mapper.SessaoMapper;
@@ -40,7 +40,7 @@ class ReservaIngressoServiceTest {
     private AuthenticationInfoService authService;
 
     @InjectMocks
-    private ReservaIngressoService reservaIngressoService; //classe a ser testada
+    private ReservaService reservaService; //classe a ser testada
 
     private Sessao sessaoDomain;
     private Long sessaoId = 1L;
@@ -79,7 +79,7 @@ class ReservaIngressoServiceTest {
 
 
         //ACT / WHEN / Quando...
-        Ingresso ingressoGerado = reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
+        Ingresso ingressoGerado = reservaService.reservarIngresso(sessaoId, assentoParaReservar);
 
         // ASSERT / THEN / Então...
         //verificar se o recibo foi gerado corretamente
@@ -99,7 +99,7 @@ class ReservaIngressoServiceTest {
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId);
 
         Assertions.assertThrows(AssentoIndisponivelException.class, () ->{
-            reservaIngressoService.reservarIngresso(sessaoId, assentoJaReservado);
+            reservaService.reservarIngresso(sessaoId, assentoJaReservado);
         });
         verify(jpaSessaoRepository, never()).save(any(SessaoEntity.class));
     }
@@ -127,7 +127,7 @@ class ReservaIngressoServiceTest {
         String assentoParaReservar = "A1";
 
         Assertions.assertThrows(SessaoIndisponivelException.class, () -> {
-            reservaIngressoService.reservarIngresso(sessaoId, assentoParaReservar);
+            reservaService.reservarIngresso(sessaoId, assentoParaReservar);
         });
 
         verify(jpaSessaoRepository, never()).save(any());
@@ -145,7 +145,7 @@ class ReservaIngressoServiceTest {
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId); //mockar o authService
 
         Assertions.assertThrows(SessaoLotadaException.class, () -> {
-            reservaIngressoService.reservarIngresso(sessaoId, "A1");
+            reservaService.reservarIngresso(sessaoId, "A1");
         });
 
         verify(jpaSessaoRepository, never()).save(any());
@@ -162,7 +162,7 @@ class ReservaIngressoServiceTest {
         when(jpaSessaoRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(SessaoInexistenteException.class, ()->{
-            reservaIngressoService.reservarIngresso(idInexistente, qualquerAssento);
+            reservaService.reservarIngresso(idInexistente, qualquerAssento);
         });
 
         verify(sessaoMapper, never()).toDomain(any());
@@ -176,7 +176,7 @@ class ReservaIngressoServiceTest {
         String qualquerAssento = "A1";
 
         Assertions.assertThrows(SessaoInexistenteException.class, ()->{
-            reservaIngressoService.reservarIngresso(idNulo, qualquerAssento);
+            reservaService.reservarIngresso(idNulo, qualquerAssento);
         });
 
         verify(jpaSessaoRepository, never()).findById(any());
@@ -191,7 +191,7 @@ class ReservaIngressoServiceTest {
     void deveLancarIllegalArgumentExceptionQuandoCodigoAssentoForInvalido(String assentoInvalido){
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            reservaIngressoService.reservarIngresso(sessaoId, assentoInvalido);
+            reservaService.reservarIngresso(sessaoId, assentoInvalido);
         });
         verifyNoInteractions(jpaSessaoRepository, sessaoMapper, authService);
     }
@@ -205,7 +205,7 @@ class ReservaIngressoServiceTest {
         when(authService.getAuthenticatedUserId()).thenReturn(dummyUserId);
 
         Assertions.assertThrows(AssentoInexistenteException.class, ()->{
-           reservaIngressoService.reservarIngresso(sessaoId, assentoInexistente);
+           reservaService.reservarIngresso(sessaoId, assentoInexistente);
         });
 
         verify(jpaSessaoRepository, never()).save(any());

@@ -1,4 +1,4 @@
-package br.ifsp.demo.application.service;
+package br.ifsp.demo.application.service._ReservaServiceTEMPORARIO;
 
 import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.model.AssentoSessao;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class ReservaIngressoService {
+public class ReservaService {
 
     private final JpaSessaoRepository jpaSessaoRepository;
     private final SessaoMapper sessaoMapper;
     private final AuthenticationInfoService authService;
 
-    public ReservaIngressoService(JpaSessaoRepository jpaSessaoRepository, SessaoMapper sessaoMapper, AuthenticationInfoService authService) {
+    public ReservaService(JpaSessaoRepository jpaSessaoRepository, SessaoMapper sessaoMapper, AuthenticationInfoService authService) {
         this.jpaSessaoRepository = jpaSessaoRepository;
         this.sessaoMapper = sessaoMapper;
         this.authService = authService;
