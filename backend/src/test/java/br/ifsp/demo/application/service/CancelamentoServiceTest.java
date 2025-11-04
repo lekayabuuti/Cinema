@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @Tag("UnitTest")
 @Tag("TDD")
-class CancelamentoServiceTest {
+class BuscarReservaServiceTest {
     @Mock
     private JpaSessaoRepository jpaSessaoRepository;
 
