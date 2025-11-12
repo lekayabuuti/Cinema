@@ -27,4 +27,8 @@ public class IngressoEntity {
     @ManyToOne // relacionamento = muitos ingressos para Uma reserva
     @JoinColumn(name = "reserva_id") // pode ser nulo, pq um ingresso pode não ter reserva ainda.
     private ReservaEntity reserva;
+
+    @ManyToOne
+    @JoinColumn(name = "assento_sessao_id")
+    private AssentoSessaoEntity assentoSessao;
 }
