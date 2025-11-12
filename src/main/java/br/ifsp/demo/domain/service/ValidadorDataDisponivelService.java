@@ -5,7 +5,7 @@ import br.ifsp.demo.infrastructure.persistence.repository.JpaDataIndisponivelRep
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
-
+@Service
 public class ValidadorDataDisponivelService {
 
     private final JpaDataIndisponivelRepository jpaDataIndisponivelRepository;
