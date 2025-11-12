@@ -1,15 +1,21 @@
 package br.ifsp.demo.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "assentos")
 public class AssentoEntity {
 
+    @Getter
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
+    @Setter
     @Column(nullable = false)
     private String codigo;
 
@@ -20,11 +26,7 @@ public class AssentoEntity {
     }
 
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getCodigo() { return codigo; }
-    public void setCodigo(String codigo) { this.codigo = codigo; }
-
-
+    @ManyToOne
+    @JoinColumn(name = "sala_id")
+    private SalaEntity sala;
 }
