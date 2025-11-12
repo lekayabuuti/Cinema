@@ -4,9 +4,11 @@ import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.domain.repository.AssentoSessaoRepository;
 import br.ifsp.demo.domain.service.SessaoService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Service
 public class AssentoSessaoService {

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
+
 public class SessaoService {
     private final SessaoRepository sessaoRepository;
     private final ValidadorDataDisponivelService validator;

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.UUID;
 
-@Service
+
 public class ReservaService {
 
     private final SessaoRepository sessaoRepository;
