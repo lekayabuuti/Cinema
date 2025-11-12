@@ -10,7 +10,7 @@ import java.util.List; import java.util.UUID;
 public interface JpaReservaRepository extends JpaRepository<ReservaEntity, Long> {
     @Query("SELECT r FROM ReservaEntity r " +
             "JOIN r.ingressos i " +
-            "WHERE r.sessao.id = :sessaoId AND i.assentoSessao.userId = :usuarioId")
+            "WHERE r.sessao.id = :sessaoId AND i.assentoSessao.usuario.id = :usuarioId")
     List<ReservaEntity> findBySessaoIdAndUsuarioId(@Param("sessaoId") Long sessaoId,
                                                    @Param("usuarioId") UUID usuarioId);
     List<ReservaEntity> findByUsuarioId(@Param("usuarioId") UUID usuarioId);
