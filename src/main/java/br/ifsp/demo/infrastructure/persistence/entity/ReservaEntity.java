@@ -1,5 +1,6 @@
 package br.ifsp.demo.infrastructure.persistence.entity;
 
+import br.ifsp.demo.infrastructure.security.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +19,10 @@ public class ReservaEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "sessao_id", nullable = false)
     private SessaoEntity sessao;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private User usuario;
 
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngressoEntity> ingressos = new ArrayList<>();
