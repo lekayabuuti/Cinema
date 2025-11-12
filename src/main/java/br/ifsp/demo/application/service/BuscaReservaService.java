@@ -27,7 +27,7 @@ public class BuscaReservaService {
     public List<AssentoSessao> buscarMinhasReservas(){
         UUID usuarioLogadoId = authService.getAuthenticatedUserId();
 
-        List<AssentoSessaoEntity> entidadesDoBanco = repository.findByUserIdAndStatus(usuarioLogadoId, Status.RESERVADO);
+        List<AssentoSessaoEntity> entidadesDoBanco = repository.findByUsuario_IdAndStatus(usuarioLogadoId, Status.RESERVADO);
 
         return entidadesDoBanco.stream()
                 .map(mapper::toDomain)

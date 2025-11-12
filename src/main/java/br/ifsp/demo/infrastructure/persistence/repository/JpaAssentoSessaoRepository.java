@@ -9,5 +9,5 @@ import java.util.UUID;
 
 public interface JpaAssentoSessaoRepository extends JpaRepository<AssentoSessaoEntity, Long> {
     List<AssentoSessaoEntity> findBySessaoId(Long sessaoId);
-    List<AssentoSessaoEntity> findByUserIdAndStatus(UUID userId, Status status);
+    List<AssentoSessaoEntity> findByUsuario_IdAndStatus(UUID userId, Status status);
 }
