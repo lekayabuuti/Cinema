@@ -1,8 +1,13 @@
 package br.ifsp.demo.infrastructure.persistence.entity;
 
 import br.ifsp.demo.domain.enumerations.Status;
+import br.ifsp.demo.infrastructure.security.user.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "assentos_sessao")
 public class AssentoSessaoEntity {
@@ -19,6 +24,10 @@ public class AssentoSessaoEntity {
     @JoinColumn(name = "sessao_id", nullable = false)
     private SessaoEntity sessao;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private User usuario;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
@@ -31,15 +40,4 @@ public class AssentoSessaoEntity {
         this.status = status;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public AssentoEntity getAssento() { return assento; }
-    public void setAssento(AssentoEntity assento) { this.assento = assento; }
-
-    public SessaoEntity getSessao() { return sessao; }
-    public void setSessao(SessaoEntity sessao) { this.sessao = sessao; }
-
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
 }
