@@ -2,7 +2,7 @@ package br.ifsp.demo.service;
 
 import br.ifsp.demo.domain.exception.DataInvalidaException;
 import br.ifsp.demo.domain.exception.DataPassadaException;
-import br.ifsp.demo.domain.service.SessaoService;
+import br.ifsp.demo.infrastructure.service.SessaoServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(MockitoExtension.class)
 public class IntervaloBuscaTest {
     @InjectMocks
-    SessaoService service;
+    SessaoServiceImpl service;
     //36
     @Test
     @Tag("UnitTest")

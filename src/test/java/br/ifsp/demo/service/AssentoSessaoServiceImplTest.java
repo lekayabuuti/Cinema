@@ -8,7 +8,7 @@ import br.ifsp.demo.domain.repository.SessaoRepository;
 import br.ifsp.demo.domain.service.AssentoSessaoService;
 import br.ifsp.demo.domain.enumerations.Status;
 
-import br.ifsp.demo.domain.service.SessaoService;
+import br.ifsp.demo.infrastructure.service.SessaoServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -24,11 +24,12 @@ import static org.mockito.Mockito.when;
 @Tag("UnitTest")
 @Tag("TDD")
 @ExtendWith(MockitoExtension.class)
-public class AssentoSessaoServiceTest {
+public class AssentoSessaoServiceImplTest {
 
     @Mock AssentoSessaoRepository assentoSessaoRepository;
     @Mock SessaoRepository sessaoRepository;
-    @Mock SessaoService sessaoService;
+    @Mock
+    SessaoServiceImpl sessaoServiceImpl;
     @Mock Assento assentoMock;
     @Mock Sessao sessaoMock;
     @Mock Filme filmeMock;
@@ -90,7 +91,7 @@ public class AssentoSessaoServiceTest {
     @DisplayName("Deve lancar SessaoInativaException ao pesquisar assento de sessao passada")
     void deveLancarExceptionAoPesquisarAssentoSessaoPassada() {
         Long sessaoID = 1L;
-        when(sessaoService.buscarSessaoPorId(sessaoID))
+        when(sessaoServiceImpl.buscarSessaoPorId(sessaoID))
                 .thenThrow(new SessaoInativaException("Sessao Encerrada para consultas!"));
 
         assertThrows(SessaoInativaException.class, () -> assentoSessaoService.buscarPorSessao(sessaoID));
@@ -103,7 +104,7 @@ public class AssentoSessaoServiceTest {
     @DisplayName("Deve lancar SessaoInexistenteException ao pesquisar assento de sessao inexistente")
     void deveLancarExceptionAoPesquisarSessaoInexistente() {
         Long sessaoID = 1L;
-        when(sessaoService.buscarSessaoPorId(sessaoID))
+        when(sessaoServiceImpl.buscarSessaoPorId(sessaoID))
                 .thenThrow(new SessaoInexistenteException("Sessão não encontrada."));
 
         assertThrows(SessaoInexistenteException.class, () -> assentoSessaoService.buscarPorSessao(sessaoID));

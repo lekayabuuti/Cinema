@@ -3,8 +3,7 @@ package br.ifsp.demo.application.service;
 import br.ifsp.demo.domain.enumerations.Status;
 import br.ifsp.demo.domain.model.AssentoSessao;
 import br.ifsp.demo.domain.repository.AssentoSessaoRepository;
-import br.ifsp.demo.domain.service.SessaoService;
-import org.springframework.context.annotation.Primary;
+import br.ifsp.demo.infrastructure.service.SessaoServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +13,11 @@ import java.util.List;
 public class AssentoSessaoService {
 
     private final AssentoSessaoRepository assentoSessaoRepository;
-    private final SessaoService sessaoService;
+    private final SessaoServiceImpl sessaoServiceImpl;
 
-    public AssentoSessaoService(AssentoSessaoRepository assentoSessaoRepository, SessaoService sessaoService) {
+    public AssentoSessaoService(AssentoSessaoRepository assentoSessaoRepository, SessaoServiceImpl sessaoServiceImpl) {
         this.assentoSessaoRepository = assentoSessaoRepository;
-        this.sessaoService = sessaoService;
+        this.sessaoServiceImpl = sessaoServiceImpl;
     }
 
     public List<AssentoSessao> buscarPorSessao(Long sessaoId, Boolean somenteDisponiveis) {
@@ -27,7 +26,7 @@ public class AssentoSessaoService {
             throw new IllegalArgumentException("O ID da sessão deve ser um número inteiro positivo.");
         }
 
-        sessaoService.buscarSessaoPorId(sessaoId);
+        sessaoServiceImpl.buscarSessaoPorId(sessaoId);
 
         boolean apenasDisponiveis = somenteDisponiveis != null && somenteDisponiveis;
 

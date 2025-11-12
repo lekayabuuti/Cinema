@@ -1,5 +1,5 @@
 package br.ifsp.demo.service;
-import br.ifsp.demo.domain.service.SessaoService;
+import br.ifsp.demo.infrastructure.service.SessaoServiceImpl;
 import br.ifsp.demo.domain.model.*;
 import br.ifsp.demo.domain.service.ValidadorDataDisponivelService;
 import br.ifsp.demo.domain.repository.SessaoRepository;
@@ -15,13 +15,13 @@ import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
-public class SessaoServiceTest {
+public class SessaoServiceImplTest {
     @Mock
     SessaoRepository sessaoRepository;
     @Mock
     ValidadorDataDisponivelService validador;
     @InjectMocks
-    SessaoService sessaoService;
+    SessaoServiceImpl sessaoServiceImpl;
 
     private Sessao novaSessao(String nome, int minutos, LocalDate data, LocalTime hora, Integer numero) {
         Filme filme = new Filme(nome,minutos);
@@ -42,7 +42,7 @@ public class SessaoServiceTest {
         Sessao sessao =  novaSessao("Matrix", 136, dataInicial, LocalTime.of(19, 30), 3);
 
         when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(sessao));
-        List<Sessao> resultado = sessaoService.buscarSessoesEntre(dataInicial,dataFinal);
+        List<Sessao> resultado = sessaoServiceImpl.buscarSessoesEntre(dataInicial,dataFinal);
 
         assertThat(resultado).isNotEmpty();
         assertThat(resultado).hasSize(1);
@@ -59,7 +59,7 @@ public class SessaoServiceTest {
         Sessao sessao = novaSessao("Filme Teste", 120, dataInicial, LocalTime.of(20, 0), 1);
 
         when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of(sessao));
-        List<Sessao> resultado = sessaoService.buscarSessoesEntre(dataInicial, dataFinal);
+        List<Sessao> resultado = sessaoServiceImpl.buscarSessoesEntre(dataInicial, dataFinal);
 
         assertThat(resultado).isNotEmpty();
         assertThat(resultado.get(0).getFilme().nome()).isEqualTo("Filme Teste");
@@ -76,7 +76,7 @@ public class SessaoServiceTest {
         LocalDate dataInicial = LocalDate.now();
         LocalDate dataFinal = dataInicial.plusDays(1);
         when(sessaoRepository.findByDataBetween(dataInicial, dataFinal)).thenReturn(List.of());
-        List<Sessao> resultado = sessaoService.buscarSessoesEntre(dataInicial, dataFinal);
+        List<Sessao> resultado = sessaoServiceImpl.buscarSessoesEntre(dataInicial, dataFinal);
         assertThat(resultado).isEmpty();
     }
 

@@ -5,7 +5,7 @@ import br.ifsp.demo.domain.exception.SessaoInexistenteException;
 import br.ifsp.demo.domain.model.Assento;
 import br.ifsp.demo.domain.model.Sessao;
 import br.ifsp.demo.domain.repository.AssentoSessaoRepository;
-import br.ifsp.demo.domain.service.SessaoService;
+import br.ifsp.demo.infrastructure.service.SessaoServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -19,11 +19,11 @@ import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
-public class AssentoSessaoServiceTest {
+public class AssentoSessaoServiceImplTest {
     @Mock
     AssentoSessaoRepository assentoSessaoRepository;
     @Mock
-    SessaoService sessaoService;
+    SessaoServiceImpl sessaoServiceImpl;
 
     @Mock
     Assento assentoMock;
@@ -50,7 +50,7 @@ public class AssentoSessaoServiceTest {
     void deveLancarExceptionAoPesquisarSessaoInexistente() {
         Long sessaoID = 1L;
 
-        when(sessaoService.buscarSessaoPorId(sessaoID))
+        when(sessaoServiceImpl.buscarSessaoPorId(sessaoID))
                 .thenThrow(new SessaoInexistenteException("Sessão não encontrada."));
 
         assertThrows(SessaoInexistenteException.class, () -> assentoSessaoService.buscarPorSessao(sessaoID,true));

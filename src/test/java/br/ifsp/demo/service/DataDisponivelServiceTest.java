@@ -1,7 +1,7 @@
 package br.ifsp.demo.service;
 
 import br.ifsp.demo.domain.exception.SessaoIndisponivelException;
-import br.ifsp.demo.domain.service.SessaoService;
+import br.ifsp.demo.infrastructure.service.SessaoServiceImpl;
 import br.ifsp.demo.domain.service.ValidadorDataDisponivelService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,7 +23,7 @@ public class DataDisponivelServiceTest {
 
 
     @InjectMocks
-    SessaoService service;
+    SessaoServiceImpl service;
 
     //27
     @Test
