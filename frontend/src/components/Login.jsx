@@ -6,15 +6,31 @@ function Login() {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
+    console.log('Tentando login com:', { username, password });
+
     try {
       const response = await api.post('/authenticate', {
         username,
         password
       });
+
+      console.log('Resposta da API:', response.data);
+
       const token = response.data.token;
+      if (!token) {
+        throw new Error('Token não recebido');
+      }
+
       localStorage.setItem('jwt', token);
       alert('Login bem-sucedido!');
     } catch (error) {
+      console.error('Erro ao fazer login:', error);
+
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Dados do erro:', error.response.data);
+      }
+
       alert('Falha no login');
     }
   };
