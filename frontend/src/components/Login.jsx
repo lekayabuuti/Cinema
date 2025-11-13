@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios.js';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     localStorage.removeItem('jwt');
@@ -24,6 +26,7 @@ function Login() {
 
       localStorage.setItem('jwt', token);
       alert('Login bem-sucedido!');
+      navigate('/sessoes');
     } catch (error) {
       console.error('Erro ao fazer login:', error);
 
