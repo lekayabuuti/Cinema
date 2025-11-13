@@ -6,7 +6,9 @@ const api = axios.create({
 
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('jwt');
-  if (token) {
+
+  // não envia token na requisição de login
+  if (token && !config.url.includes('/authenticate')) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
