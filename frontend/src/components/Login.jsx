@@ -6,6 +6,7 @@ function Login() {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
+    localStorage.removeItem('jwt');
     console.log('Tentando login com:', { username, password });
 
     try {
